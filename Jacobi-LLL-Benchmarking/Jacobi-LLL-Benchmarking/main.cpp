@@ -28,8 +28,16 @@ int main(int argc, const char * argv[]) {
     /**
      *  Try LLL Reduction
      */
-    NTL::ZZ det;
-    std::cout << "Reducted Lattice: " << LLL(det, randomLattice);
+    
+    // Benchmarking FPLLL is better for reduction
+    
+    
+    // Mat<ZZ> is typedefed as typedef Mat<ZZ> mat_ZZ;
+    // ZZ_mat  is typedefed as 
+    
+    
+    ZZ_mat<double> hello;
+    
 
     
     /**

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B67C325819CE04C80096F518 /* libntl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B67C325719CE04C80096F518 /* libntl.a */; };
+		B62D8B8019DACC970031C505 /* libnewntl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B62D8B7F19DACC970031C505 /* libnewntl.a */; };
 		B6E3FD7E19CDF8C4002838D5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B6E3FD7D19CDF8C4002838D5 /* main.cpp */; };
 		B6FDC82A19CE0AB500BB32D0 /* libgmp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6FDC82919CE0AB500BB32D0 /* libgmp.a */; };
 /* End PBXBuildFile section */
@@ -25,9 +25,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B62D8B7F19DACC970031C505 /* libnewntl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnewntl.a; path = ../../../../../../usr/local/lib/libnewntl.a; sourceTree = "<group>"; };
 		B67C325419CE01C40096F518 /* generate_random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generate_random.cpp; sourceTree = "<group>"; };
 		B67C325519CE01C40096F518 /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
-		B67C325719CE04C80096F518 /* libntl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libntl.a; path = /usr/local/lib/libntl.a; sourceTree = "<absolute>"; };
 		B6E3FD7A19CDF8C4002838D5 /* Jacobi-LLL-Benchmarking */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Jacobi-LLL-Benchmarking"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6E3FD7D19CDF8C4002838D5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B6FDC82919CE0AB500BB32D0 /* libgmp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgmp.a; path = ../../../../../../usr/local/lib/libgmp.a; sourceTree = "<group>"; };
@@ -38,8 +38,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B67C325819CE04C80096F518 /* libntl.a in Frameworks */,
 				B6FDC82A19CE0AB500BB32D0 /* libgmp.a in Frameworks */,
+				B62D8B8019DACC970031C505 /* libnewntl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +59,7 @@
 		B6E3FD7119CDF8C4002838D5 = {
 			isa = PBXGroup;
 			children = (
+				B62D8B7F19DACC970031C505 /* libnewntl.a */,
 				B6FDC82919CE0AB500BB32D0 /* libgmp.a */,
 				B6E3FD7C19CDF8C4002838D5 /* Jacobi-LLL-Benchmarking */,
 				B6E3FD7B19CDF8C4002838D5 /* Products */,
@@ -85,7 +86,6 @@
 		B6E3FD8419CDF913002838D5 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B67C325719CE04C80096F518 /* libntl.a */,
 				B67C325319CE01C40096F518 /* lattice_gen */,
 			);
 			name = Libraries;
