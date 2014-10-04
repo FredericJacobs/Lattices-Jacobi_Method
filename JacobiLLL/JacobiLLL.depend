@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1412464044 source:/home/fred/lattice-reductions/JacobiLLL/main.cpp
+	<iostream>
+	<sstream>
+	<newNTL/LLL.h>
+	<newNTL/mat_ZZ.h>
+	"../lib/tools.h"
+
+1412463227 /home/fred/lattice-reductions/lib/tools.h
+	<newNTL/RR.h>
+
