@@ -2,7 +2,8 @@
 
 ## Compiler and Environment
 
-
+- Installing fplll on the Mac. Brew install gcc, mpfr, gmp.
+- then `./configure CC=gcc CXX=g++ --with-gmp=/usr/local/opt/gmp --withmpfr=/usr/local/opt/mpfr` and `make install`
 
 ## Libraries 
 
