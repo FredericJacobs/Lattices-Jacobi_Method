@@ -1,11 +1,25 @@
 # depslib dependency file v1.0
-1412464044 source:/home/fred/lattice-reductions/JacobiLLL/main.cpp
+1412794778 source:/home/fred/lattice-reductions/JacobiLLL/main.cpp
 	<iostream>
 	<sstream>
 	<newNTL/LLL.h>
 	<newNTL/mat_ZZ.h>
-	"../lib/tools.h"
+	"JacobiMethod.h"
+	"tools.h"
 
 1412463227 /home/fred/lattice-reductions/lib/tools.h
 	<newNTL/RR.h>
+
+1412503057 /home/fred/lattice-reductions/JacobiLLL/tools.h
+	<newNTL/RR.h>
+
+1412885096 source:/home/fred/lattice-reductions/JacobiLLL/src/JacobiMethod.cpp
+	"JacobiMethod.h"
+	<newNTL/mat_RR.h>
+	<newNTL/mat_ZZ.h>
+	<newNTL/vec_ZZ.h>
+	<newNTL/vector.h>
+
+1412589101 /home/fred/lattice-reductions/JacobiLLL/include/JacobiMethod.h
+	<newNTL/mat_ZZ.h>
 

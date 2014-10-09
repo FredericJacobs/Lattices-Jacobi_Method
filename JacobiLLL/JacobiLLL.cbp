@@ -13,7 +13,15 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
+				<Linker>
+					<Add library="/usr/local/lib/libnewntl.a" />
+					<Add library="/usr/lib/libmpfr.so" />
+					<Add library="/usr/lib/libgmp.so" />
+					<Add library="/usr/lib/libgmpxx.so" />
+					<Add library="/usr/local/lib/libfplll.a" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/JacobiLLL" prefix_auto="1" extension_auto="1" />
@@ -22,6 +30,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -32,7 +41,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/JacobiMethod.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/JacobiMethod.cpp" />
+		<Unit filename="tools.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

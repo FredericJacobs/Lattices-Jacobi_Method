@@ -2,11 +2,12 @@
 #include <sstream>
 #include <newNTL/LLL.h>
 #include <newNTL/mat_ZZ.h>
+#include "JacobiMethod.h"
 
 using namespace std;
 using namespace newNTL;
 
-#include "../lib/tools.h"
+#include "tools.h"
 
 mat_ZZ generateRandomLatticeBase (long n, long bit, ZZ seed) {
     vec_ZZ v;
@@ -26,6 +27,14 @@ mat_ZZ generateRandomLatticeBase (long n, long bit, ZZ seed) {
 
 int main()
 {
-    cout << generateRandomLatticeBase(80, 10, 0);
+    mat_ZZ B = generateRandomLatticeBase(80, 10, 0);
+//    mat_ZZ C = B;
+//    cout << "Random Lattice to be reduced: " << generateRandomLatticeBase(80, 10, 0);
+//    LLL_fplll(C);
+//    cout << "LLL Reduced Lattice: " << C;
+//    cout << "Jacobi Reduced Lattice: ";
+
+    JacobiMethod::reduceLattice(B);
+
     return 0;
 }
