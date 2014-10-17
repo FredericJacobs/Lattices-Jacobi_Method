@@ -6,9 +6,7 @@
 class JacobiMethod
 {
     public:
-        static newNTL::mat_ZZ reduceLattice (newNTL::mat_ZZ &matrix);
-        JacobiMethod();
-        virtual ~JacobiMethod();
+        static void reduceLattice (newNTL::mat_ZZ &matrix);
     protected:
     private:
 };

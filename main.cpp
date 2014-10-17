@@ -27,7 +27,7 @@ mat_ZZ generateRandomLatticeBase (long n, long bit, ZZ seed) {
 
 int main()
 {
-    mat_ZZ B = generateRandomLatticeBase(80, 10, 0);
+    mat_ZZ B = generateRandomLatticeBase(15, 10, 0);
 //    mat_ZZ C = B;
 //    cout << "Random Lattice to be reduced: " << generateRandomLatticeBase(80, 10, 0);
 //    LLL_fplll(C);
