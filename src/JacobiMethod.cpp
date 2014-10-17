@@ -22,7 +22,6 @@ ZZ computeQ(vec_ZZ &a1, vec_ZZ &a2) {
 }
 
 void lagrange (vec_ZZ &a1, vec_ZZ &a2) {
-    // In the paper, they compare the square root of the norms, here we will just compare the norms, which should be equivalent since they are both positive integers.
     if ( normsq(a1) < normsq(a2) ){
         swap(a1, a2);
     }
@@ -72,7 +71,7 @@ mat_ZZ genericJacobiMethod(mat_ZZ &matrix) {
 
 #pragma mark LagrangeIT Algorithm
 
-void lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j) {
+bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
     int s = i;
     int l = j;
 
@@ -81,30 +80,58 @@ void lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j) {
         l = i;
     }
 
-    RR qNum   = g(j,i);
-    RR qDenom = g(s, s);
-    ZZ q = (RoundToZZ(qNum/qDenom));
+    RR gij = g(s,l);
+    RR gss = g(s,s);
+    RR gll = g(l,l);
+    ZZ q = RoundToZZ(gij/gss);
 
-    mat_ZZ zij = ident_mat_ZZ(g.NumCols());
-    zij(s,l)= -q;
+    if (abs(q) <= 1 && (((omega*omega)*gll) <= ( gss + gll - 2*(abs(gij))))) {
+        //cout << "Lagrange false with index : " << i << ", " << j << endl;
+        return false;
+    }
 
-    g = zij * transpose(g) * transpose(zij);
-    z = z*zij;
+    z(l) -= q * z(s);
+    g(l) -= q * g(s);
+
+    for (int k = 1; k <= g.NumRows(); k++ ) {
+        g(k,l) = g(l,k);
+    }
+
+    g(l,l) -= q * g(l,s);
+    assert(g == z * transpose(z));
+    return true;
 }
 
 #pragma mark Fast Jacobi Method
 
-bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR &omega) {
+bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
     int nRows = g.NumRows();
 
     for (int i = 1; i < nRows; i++) {
         for (int j = i + 1; j <= nRows; j++) {
 
-            if (!(abs(RoundToZZ( (g(i) * g(j))/(g(i,i)) )) <= 1)) { // ss == ii?
+            int s = i;
+            int l = j;
+
+            if (g(i, i) > g(j,j)){
+                s = j;
+                l = i;
+            }
+
+            RR gij = g(s,l);
+            RR gss = g(s,s);
+            RR gll = g(l,l);
+
+            ZZ condition1 = abs(RoundToZZ(gij/gss));
+            if (condition1 > 1) {
+                //cout << "indexes : " << s << ", " << l << endl;
+                //cout << "gij, gss, gll : " << gij << ", " << gss << ", " << gll << endl;
                 return true;
             }
 
-            if (!(((omega*omega)*g(j,j)) <= ( g(i,i) + g(j,j) - 2*(abs(g(i,j)))))) { // ll == jj?
+            if (((omega * omega)*gll) > ( gss + gll - 2*(abs(gij)))) {
+                //cout << "indexes : " << s << ", " << l << endl;
+                //cout << "gij, gss, gll : " << gij << ", " << gss << ", " << gll << endl;
                 return true;
             }
         }
@@ -115,29 +142,35 @@ bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR &omega) {
 
 // Returns Z, the unimodular reduction matrix
 
-mat_ZZ fastJacobiMethod(mat_ZZ &matrix, mat_ZZ &a, mat_ZZ &z, RR omega) {
-    int n = matrix.NumRows();
-    mat_ZZ g = a * transpose(a);
-    z = ident_mat_ZZ(matrix.NumCols());
+mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
+    int n = basis.NumRows();
+    mat_ZZ g = basis * transpose(basis);
 
-    while (fastJacobiMethodLoopShouldRun(matrix, omega)) {
+    bool didReplace = true;
+
+    while(didReplace){
+        didReplace = false;
+
         for (int i = 1; i < n; i++) {
             for (int j = i + 1; j <= n; j++) {
-                lagrangeIT(g, z, i, j);
+                didReplace =  didReplace || lagrangeIT(g, basis, i, j, omega);
             }
         }
+
     }
 
-    return z;
+    cout << "Gram matrix: " << g << endl;
+
+    return basis;
 }
 
 #pragma mark Reduce Lattice
 
 void JacobiMethod::reduceLattice (mat_ZZ &matrix) {
-    mat_ZZ a;
-    mat_ZZ z;
+    mat_ZZ reducedLattice = fastJacobiMethod(matrix, to_RR(0.99));
+    cout << "Reduced Lattice" << reducedLattice << endl;
 
-    fastJacobiMethod(matrix, a, z, 0.6);
+    mat_ZZ g = reducedLattice * transpose(reducedLattice);
+    cout << fastJacobiMethodLoopShouldRun(g, to_RR(0.99));
 
-    matrix = a*z;
 }

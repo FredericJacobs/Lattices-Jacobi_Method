@@ -27,13 +27,10 @@ mat_ZZ generateRandomLatticeBase (long n, long bit, ZZ seed) {
 
 int main()
 {
-    mat_ZZ B = generateRandomLatticeBase(15, 10, 0);
-//    mat_ZZ C = B;
-//    cout << "Random Lattice to be reduced: " << generateRandomLatticeBase(80, 10, 0);
-//    LLL_fplll(C);
-//    cout << "LLL Reduced Lattice: " << C;
-//    cout << "Jacobi Reduced Lattice: ";
-
+    mat_ZZ B = generateRandomLatticeBase(10, 10, 0);
+    mat_ZZ C = B;
+    LLL_fplll(C);
+    cout << "LLL Reduced Lattice: " << C;
     JacobiMethod::reduceLattice(B);
 
     return 0;
