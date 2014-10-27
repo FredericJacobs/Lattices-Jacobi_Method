@@ -2,11 +2,12 @@
 #define JACOBIMETHOD_H
 
 #include <newNTL/mat_ZZ.h>
+#include <newNTL/RR.h>
 
 class JacobiMethod
 {
     public:
-        static void reduceLattice (newNTL::mat_ZZ &matrix);
+        static void reduceLattice (newNTL::mat_ZZ &matrix, newNTL::RR omega = 0.9);
     protected:
     private:
 };

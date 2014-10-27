@@ -159,18 +159,12 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
 
     }
 
-    cout << "Gram matrix: " << g << endl;
-
     return basis;
 }
 
 #pragma mark Reduce Lattice
 
-void JacobiMethod::reduceLattice (mat_ZZ &matrix) {
-    mat_ZZ reducedLattice = fastJacobiMethod(matrix, to_RR(0.99));
-    cout << "Reduced Lattice" << reducedLattice << endl;
-
-    mat_ZZ g = reducedLattice * transpose(reducedLattice);
-    cout << fastJacobiMethodLoopShouldRun(g, to_RR(0.99));
-
+void JacobiMethod::reduceLattice (mat_ZZ &matrix, RR omega) {
+    mat_ZZ reducedLattice = fastJacobiMethod(matrix, omega);
+    matrix = reducedLattice;
 }
