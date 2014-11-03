@@ -89,10 +89,10 @@ bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
         //cout << "Lagrange false with index : " << i << ", " << j << endl;
         return false;
     }
-
+    //cout << "old z[l] " << normsq(z(l))  << "old g[l] " <<normsq(g(l)) <<endl;
     z(l) -= q * z(s);
     g(l) -= q * g(s);
-
+    //cout << "new z[l] " <<normsq(z(l) )<< "new g[l] " <<normsq(g(l)) <<endl;
     for (int k = 1; k <= g.NumRows(); k++ ) {
         g(k,l) = g(l,k);
     }
@@ -145,12 +145,11 @@ bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
 mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
     int n = basis.NumRows();
     mat_ZZ g = basis * transpose(basis);
-
     bool didReplace = true;
 
     while(didReplace){
+        cout <<"." ;
         didReplace = false;
-
         for (int i = 1; i < n; i++) {
             for (int j = i + 1; j <= n; j++) {
                 didReplace =  didReplace || lagrangeIT(g, basis, i, j, omega);

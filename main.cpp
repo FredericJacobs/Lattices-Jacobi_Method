@@ -9,7 +9,7 @@ using namespace newNTL;
 
 #include "tools.h"
 
-const long BENCHMARK_MATRIX_SIZE  = 10;
+const long BENCHMARK_MATRIX_SIZE  = 30;
 const long BENCHMARK_MATRIX_BIT   = 10;
 const ZZ   BENCHMARK_MATRIX_SEED  = 0;
 
@@ -34,8 +34,9 @@ mat_ZZ generateRandomLatticeBase(long n, long bit, ZZ seed) {
 
 RR computeHermiteFactor(mat_ZZ &mat) {
     RR numerator   = sqrt(normsq(mat(1)));
-    RR denominator = pow(abs(determinant(mat)), (1/mat.NumRows()));
-    return numerator/denominator;
+    RR denominator = sqrt(determinant(mat * transpose(mat)));
+    RR result =  numerator/denominator;
+    return result;
 }
 
 RR computeOrthogonalityDefect(mat_ZZ &mat) {
@@ -45,7 +46,7 @@ RR computeOrthogonalityDefect(mat_ZZ &mat) {
         multResult *= sqrt(normsq(mat(i)));
     }
 
-    RR denominator = sqr(determinant(mat * transpose(mat)));
+    RR denominator = sqrt(determinant(mat * transpose(mat)));
 
     return multResult/denominator;
 }
@@ -104,18 +105,18 @@ void jacobiThenLLL () {
 
 void jacobiVSLLL () {
     mat_ZZ matrix = generateRandomLatticeBase(BENCHMARK_MATRIX_SIZE, BENCHMARK_MATRIX_BIT, BENCHMARK_MATRIX_SEED);
+    
     mat_ZZ matrixLLL = matrix;
-
-    JacobiMethod::reduceLattice(matrix);
-
-    RR defectJacobi  = computeOrthogonalityDefect(matrix);
-    RR hermiteJacobi = computeHermiteFactor(matrix);
-
     LLL_fplll(matrixLLL);
-
     RR defectLLL  = computeOrthogonalityDefect(matrixLLL);
     RR hermiteLLL = computeHermiteFactor(matrixLLL);
+    cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<endl;
 
+    JacobiMethod::reduceLattice(matrix);
+    RR defectJacobi  = computeOrthogonalityDefect(matrix);
+    RR hermiteJacobi = computeHermiteFactor(matrix);
+    cout << "defectJacobi " << defectJacobi <<" hermiteJacobi " <<hermiteJacobi  <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
+    
     if (defectJacobi > defectLLL) {
         cout << "LLL has a better defect" << endl;
     } else if (defectLLL > defectJacobi){
@@ -154,12 +155,31 @@ void findParameterForSameDefect () {
 
 int main()
 {
-    for (int i = 0; i < 10000; i++) {
-        lllThenJacobi();
-        jacobiThenLLL();
-        jacobiVSLLL();
-    }
+    mat_ZZ matrix =   generateRandomLatticeBase(40, 20, BENCHMARK_MATRIX_SEED);
+    matrix(40,1)=1;//add very short vector 1,0,...,0,0,1
+    mat_ZZ matrixJacobi = matrix;
 
+    cout << "LLL, dim 40, seed 0, matrix contains short vector 1,0, ...,0,1" << endl;
+    LLL_fplll(matrix);
+    
+    RR defectLLL  = computeOrthogonalityDefect(matrix);
+    RR hermiteLLL = computeHermiteFactor(matrix);
+    cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
+    
+    matrix =   generateRandomLatticeBase(80, 20, BENCHMARK_MATRIX_SEED);
+    LLL_fplll(matrix);
+    
+    defectLLL  = computeOrthogonalityDefect(matrix);
+     hermiteLLL = computeHermiteFactor(matrix);
+    cout << "LLL, dim 80, seed 0" <<endl;
+    cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
+    
+    
+    cout << "Jacobi, dim 40, seed 0, matrix contains short vector 1,0, ...,0,1" << endl;
+    JacobiMethod::reduceLattice(matrixJacobi);
+    RR defectJacobi  = computeOrthogonalityDefect(matrixJacobi);
+    RR hermiteJacobi = computeHermiteFactor(matrixJacobi);
+    cout << "defectJacobi " << defectJacobi <<" hermiteJacobi " <<hermiteJacobi  <<" norm b1 " <<sqrt(normsq(matrixJacobi(1)))<<endl;
 
     return 0;
 }
