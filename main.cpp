@@ -48,7 +48,7 @@ RR computeOrthogonalityDefect(mat_ZZ &mat) {
 
     RR denominator = sqrt(determinant(mat * transpose(mat)));
 
-    return multResult/denominator;
+    return pow(multResult/denominator, 1./mat.NumRows());
 }
 
 
@@ -156,22 +156,33 @@ void findParameterForSameDefect () {
 int main()
 {
     mat_ZZ matrix =   generateRandomLatticeBase(40, 20, BENCHMARK_MATRIX_SEED);
-    matrix(40,1)=1;//add very short vector 1,0,...,0,0,1
+    //matrix(40,1)=1;//add very short vector 1,0,...,0,0,1
+    //cout << " matrix contains short vector 1,0, ...,0,1" << endl;
+
     mat_ZZ matrixJacobi = matrix;
 
-    cout << "LLL, dim 40, seed 0, matrix contains short vector 1,0, ...,0,1" << endl;
+    cout << "LLL, dim 40, seed 0" <<endl;
     LLL_fplll(matrix);
     
     RR defectLLL  = computeOrthogonalityDefect(matrix);
     RR hermiteLLL = computeHermiteFactor(matrix);
     cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
     
-    matrix =   generateRandomLatticeBase(80, 20, BENCHMARK_MATRIX_SEED);
+   matrix =   generateRandomLatticeBase(100, 20, BENCHMARK_MATRIX_SEED);
+    cout << "LLL, dim 100, seed 0" <<endl;
+    LLL_fplll(matrix);
+    
+    defectLLL  = computeOrthogonalityDefect(matrix);
+    hermiteLLL = computeHermiteFactor(matrix);
+    cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
+
+    
+    matrix =   generateRandomLatticeBase(500, 20, BENCHMARK_MATRIX_SEED);
     LLL_fplll(matrix);
     
     defectLLL  = computeOrthogonalityDefect(matrix);
      hermiteLLL = computeHermiteFactor(matrix);
-    cout << "LLL, dim 80, seed 0" <<endl;
+    cout << "LLL, dim 500, seed 0" <<endl;
     cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
     
     

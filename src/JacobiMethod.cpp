@@ -146,9 +146,10 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
     int n = basis.NumRows();
     mat_ZZ g = basis * transpose(basis);
     bool didReplace = true;
-
+    long count = 0;
     while(didReplace){
-        cout <<"." ;
+        count++;
+        if(count%1000==0)cout << count<<" ";
         didReplace = false;
         for (int i = 1; i < n; i++) {
             for (int j = i + 1; j <= n; j++) {
@@ -157,7 +158,7 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
         }
 
     }
-
+    cout <<count << "while loop passings"<<endl;
     return basis;
 }
 
