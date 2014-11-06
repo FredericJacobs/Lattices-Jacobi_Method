@@ -12,6 +12,7 @@ using namespace newNTL;
 #include <newNTL/vector.h>
 
 #pragma mark Lagrange Algorithm
+bool verbose =false;
 
 ZZ computeQ(vec_ZZ &a1, vec_ZZ &a2) {
     RR qNumerator   = a1 * a2;
@@ -72,9 +73,15 @@ mat_ZZ genericJacobiMethod(mat_ZZ &matrix) {
 #pragma mark LagrangeIT Algorithm
 
 bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
+    
+    
     int s = i;
     int l = j;
-
+    if(verbose) {
+        cout << "? i,j " <<s<< " " << l<< endl;
+        cout <<z <<endl;
+        //cout <<g <<endl;
+    }
     if (g(i, i) > g(j,j)){
         s = j;
         l = i;
@@ -84,9 +91,9 @@ bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
     RR gss = g(s,s);
     RR gll = g(l,l);
     ZZ q = RoundToZZ(gij/gss);
-
+    if(verbose) cout << "q " << q <<endl;
     if (abs(q) <= 1 && (((omega*omega)*gll) <= ( gss + gll - 2*(abs(gij))))) {
-        //cout << "Lagrange false with index : " << i << ", " << j << endl;
+        if(verbose) cout << "no red" << endl;
         return false;
     }
     //cout << "old z[l] " << normsq(z(l))  << "old g[l] " <<normsq(g(l)) <<endl;
@@ -99,6 +106,12 @@ bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
 
     g(l,l) -= q * g(l,s);
     assert(g == z * transpose(z));
+    if(verbose) {
+        cout << "new i,j " <<s<< " " << l<<endl;
+        cout <<z <<endl;
+        //cout <<g <<endl;
+    }
+
     return true;
 }
 
@@ -158,7 +171,7 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
         }
 
     }
-    cout <<count << "while loop passings"<<endl;
+    cout <<count << " while loop runs"<<endl;
     return basis;
 }
 
