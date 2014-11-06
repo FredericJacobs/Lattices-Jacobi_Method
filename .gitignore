@@ -29,3 +29,10 @@
 
 # Idea 
 .idea/
+report/paper.pdf
+
+*.gz
+
+*.log
+
+*.aux

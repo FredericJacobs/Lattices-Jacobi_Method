@@ -10,8 +10,6 @@ find_library(MPFR   mpfr)
 find_library(GMP    gmp)
 find_library(FPLLL  fplll)
 
-set(SOURCE_FILES main.cpp src/JacobiMethod.cpp)
+set(SOURCE_FILES main.cpp src/JacobiMethod.cpp src/MatrixFactory.cpp)
 add_executable(JacobiMethod ${SOURCE_FILES})
 target_link_libraries(JacobiMethod ${NEWNTL} ${MPFR} ${GMP} ${FPLLL})
-
-
