@@ -179,7 +179,7 @@ bool doublelagrangeIT (Mat<double> &g, Mat<double> &z, int i, int j, RR &omega) 
     double gij = g(s,l);
     double gss = g(s,s);
     double gll = g(l,l);
-    double q = gij/gss;
+    double q      = rint(gij/gss);
 
     if (abs(q) <= 1 && (((omega*omega)*gll) <= ( gss + gll - 2*(abs(gij))))) {
         return false;
