@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "JacobiMethod.h"
+#include <time.h>
 
 using namespace std;
 using namespace newNTL;
@@ -12,8 +13,24 @@ using namespace newNTL;
 #include "tools.h"
 
 ZZ getSeed(){
+    srandom(time(NULL));
     ZZ seed = rand();
     return seed;
+}
+
+RR computeDeterminant(Mat<double> &matrix){
+    mat_RR matrixRR;
+    long cols = matrixRR.NumCols();
+    long rows = matrixRR.NumRows();
+    matrixRR.SetDims(cols, rows);
+
+    for (long i = 1; i <= cols; i++){
+        for (long j = 1; j <= rows; j++){
+            matrixRR(i,j)=matrix(i,j);
+        }
+    }
+
+    return determinant(matrixRR);
 }
 
 mat_ZZ MatrixFactory::makeHNFMatrix(long n, long bit) {
@@ -32,7 +49,7 @@ mat_ZZ MatrixFactory::makeHNFMatrix(long n, long bit) {
     return B;
 }
 
-vec_ZZ getRandomVector(long size, long bit) {
+vec_ZZ getRandomVectorZZ(long size, long bit) {
     vec_ZZ randomVec;
     randomVec.SetLength(size);
     SetSeed(getSeed());
@@ -44,7 +61,42 @@ vec_ZZ getRandomVector(long size, long bit) {
     return randomVec;
 }
 
-mat_ZZ MatrixFactory::makeRandomSquareMatrix(long n, long bit) {
+Vec<double> getRandomVectorDouble(long size, long bit) {
+    Vec<double> randomVec;
+    randomVec.SetLength(size);
+    SetSeed(getSeed());
+
+    for (int i = 1; i <= size; i++) {
+        randomVec(i) = drand48()*DBL_MAX;
+    }
+
+    return randomVec;
+}
+
+Mat<double> MatrixFactory::makeRandomSquareMatrixDouble(long n, long bit) {
+    ZZ base = 2;
+    ZZ maxDouble;
+    conv(maxDouble, DBL_MAX);
+    assert(power(base, bit) <  maxDouble);
+
+    Mat<double> randomMatrix;
+    randomMatrix.SetDims(n,n);
+    do {
+        SetSeed(getSeed());
+
+        for (int i = 1; i <= n; i++) {
+            randomMatrix(i) = getRandomVectorDouble(n, bit);
+        }
+
+    } while (computeDeterminant(randomMatrix) == 0);
+
+    cout << " Generated Matrix for test: " << randomMatrix << endl;
+
+
+    return randomMatrix;
+}
+
+mat_ZZ MatrixFactory::makeRandomSquareMatrixZZ(long n, long bit) {
     mat_ZZ randomMatrix;
     randomMatrix.SetDims(n,n);
 
@@ -52,8 +104,9 @@ mat_ZZ MatrixFactory::makeRandomSquareMatrix(long n, long bit) {
         SetSeed(getSeed());
 
         for (int i = 1; i <= n; i++) {
-            randomMatrix(i) = getRandomVector(n, bit);
+            randomMatrix(i) = getRandomVectorZZ(n, bit);
         }
+
     } while (determinant(randomMatrix) == 0);
 
 

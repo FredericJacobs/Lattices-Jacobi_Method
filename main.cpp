@@ -3,7 +3,6 @@
 #include <chrono>
 #include <fstream>
 #include <newNTL/LLL.h>
-#include <newNTL/mat_ZZ.h>
 #include "JacobiMethod.h"
 #include "MatrixFactory.h"
 
@@ -14,7 +13,7 @@ using namespace std::chrono;
 
 
 const long BENCHMARK_MATRIX_SIZE   = 30;
-const long BENCHMARK_MATRIX_BIT    = 30;
+const long BENCHMARK_MATRIX_BIT    = 10;
 const int  BENCHMARK_DIMENSION_MIN = 20;
 const int  BENCHMARK_DIMENSION_MAX = 400;
 
@@ -37,11 +36,20 @@ RR computeOrthogonalityDefect(mat_ZZ &mat) {
     return pow(multResult/denominator, 1./mat.NumRows());
 }
 
+#pragma mark
 
-void compareHermite(RR oldHermite, RR newHermite) {
+mat_ZZ toMatZZ(Mat<double> matDouble){
+    mat_ZZ matrixZZ;
+    long cols = matrixZZ.NumCols();
+    long rows = matrixZZ.NumRows();
+    matrixZZ.SetDims(rows, cols);
 
-
-
+    for (long i = 1; i <= cols; i++){
+        for (long j = 1; j <= rows; j++){
+            matrixZZ(i,j)= matDouble(i,j);
+        }
+    }
+    return matrixZZ;
 }
 
 void compareDefects(RR oldDefect, RR newDefect) {
@@ -118,7 +126,7 @@ void findParameterForSameDefect () {
     RR defectLLL;
     RR omega = 0.6;
 
-    mat_ZZ matrix = MatrixFactory::makeRandomSquareMatrix(100, 50);
+    mat_ZZ matrix = MatrixFactory::makeRandomSquareMatrixZZ(100, 50);
     mat_ZZ matrixLLL = matrix;
 
     LLL_fplll(matrixLLL);
@@ -144,9 +152,6 @@ void findParameterForSameDefect () {
 // QUESTION: HOW MANY BITS? NOT MENTIONED IN THE PAPER?
 
 
-
-
-
 void generateHermiteDataRandomMatrix () {
 
     ofstream jacobiDataFile, lllDataFile;
@@ -155,14 +160,14 @@ void generateHermiteDataRandomMatrix () {
     lllDataFile.open("dataHermiteRandomMatrix_LLL.txt");
 
     for (int i = BENCHMARK_DIMENSION_MIN ; i < BENCHMARK_DIMENSION_MAX; i++) {
-        mat_ZZ randomMatrix  = MatrixFactory::makeRandomSquareMatrix(i, BENCHMARK_MATRIX_BIT);
+        mat_ZZ randomMatrix  = MatrixFactory::makeRandomSquareMatrixZZ(i, BENCHMARK_MATRIX_BIT);
 
 
         /// Jacobi-Reduction
         mat_ZZ jacobiReduced = randomMatrix;
 
         high_resolution_clock::time_point jacobiT1 = high_resolution_clock::now();
-        JacobiMethod::reduceLattice(jacobiReduced, 0.99);
+        JacobiMethod::reduceLattice(jacobiReduced, 0.6);
         high_resolution_clock::time_point jacobiT2 = high_resolution_clock::now();
         auto jacobiDuration = std::chrono::duration_cast<std::chrono::microseconds>(jacobiT2 - jacobiT1).count();
         jacobiDataFile << i << " " << computeHermiteFactor(jacobiReduced) << " " << computeOrthogonalityDefect(jacobiReduced) << " " << jacobiDuration << endl;
@@ -180,12 +185,50 @@ void generateHermiteDataRandomMatrix () {
     lllDataFile.close();
 }
 
+void generateHermiteDoubleDataRandomMatrix () {
+
+    ofstream jacobiDataFile, lllDataFile;
+
+    jacobiDataFile.open ("dataHermiteRandomMatrix_Jacobi.txt");
+    lllDataFile.open("dataHermiteRandomMatrix_LLL.txt");
+
+    for (int i = BENCHMARK_DIMENSION_MIN ; i < BENCHMARK_DIMENSION_MAX; i++) {
+        cout << "Hello loop" << endl;
+        Mat<double> randomMatrix  = MatrixFactory::makeRandomSquareMatrixDouble(i, BENCHMARK_MATRIX_BIT);
+
+
+        /// Jacobi-Reduction
+        Mat<double> jacobiReduced = randomMatrix;
+
+        high_resolution_clock::time_point jacobiT1 = high_resolution_clock::now();
+        JacobiMethod::reduceLatticeDouble(jacobiReduced, 0.99);
+        high_resolution_clock::time_point jacobiT2 = high_resolution_clock::now();
+
+        cout << "Done" << endl;
+        auto jacobiDuration = std::chrono::duration_cast<std::chrono::microseconds>(jacobiT2 - jacobiT1).count();
+        mat_ZZ jacobiReducedZZ = toMatZZ(jacobiReduced);
+        jacobiDataFile << i << " " << computeHermiteFactor(jacobiReducedZZ) << " " << computeOrthogonalityDefect(jacobiReducedZZ) << " " << jacobiDuration << endl;
+
+        // LLL-reduction
+        mat_ZZ lllReduced = toMatZZ(randomMatrix);
+
+        high_resolution_clock::time_point lllT1 = high_resolution_clock::now();
+        LLL_fplll(lllReduced, 0.99);
+        high_resolution_clock::time_point lllT2 = high_resolution_clock::now();
+        auto lllDuration = std::chrono::duration_cast<std::chrono::microseconds>(lllT2-lllT1).count();
+        lllDataFile << i << " " << computeHermiteFactor(lllReduced) << " " << computeOrthogonalityDefect(lllReduced) << " " << lllDuration << endl;
+    }
+
+    jacobiDataFile.close();
+    lllDataFile.close();
+}
+
 int main()
 {
-    generateHermiteDataRandomMatrix();
+    //generateHermiteDataRandomMatrix();
 
     //LLL_fplll(randomMatrix);
-
+    generateHermiteDoubleDataRandomMatrix();
 
 
 //    mat_ZZ matrix = MatrixFactory::makeHNFMatrix(40, 20);

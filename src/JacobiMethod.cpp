@@ -140,6 +140,8 @@ bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
     return false;
 }
 
+
+
 // Returns Z, the unimodular reduction matrix
 
 mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
@@ -162,9 +164,64 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
     return basis;
 }
 
+
+#pragma mark Double Implementation
+
+bool doublelagrangeIT (Mat<double> &g, Mat<double> &z, int i, int j, RR &omega) {
+    int s = i;
+    int l = j;
+
+    if (g(i, i) > g(j,j)){
+        s = j;
+        l = i;
+    }
+
+    double gij = g(s,l);
+    double gss = g(s,s);
+    double gll = g(l,l);
+    double q = gij/gss;
+
+    if (abs(q) <= 1 && (((omega*omega)*gll) <= ( gss + gll - 2*(abs(gij))))) {
+        return false;
+    }
+    z(l) -= q * z(s);
+    g(l) -= q * g(s);
+    for (int k = 1; k <= g.NumRows(); k++ ) {
+        g(k,l) = g(l,k);
+    }
+
+    g(l,l) -= q * g(l,s);
+
+    return true;
+}
+
+Mat<double> fastJacobiMethod(Mat<double> &basis, RR omega) {
+    int n = basis.NumRows();
+    Mat<double> g = basis * transpose(basis);
+    bool didReplace = true;
+    long count = 0;
+    while(didReplace){
+        count++;
+        didReplace = false;
+        for (int i = 1; i < n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                didReplace =  didReplace || doublelagrangeIT(g, basis, i, j, omega);
+            }
+        }
+
+    }
+    cout <<count << "while loop passings"<<endl;
+    return basis;
+}
+
 #pragma mark Reduce Lattice
 
 void JacobiMethod::reduceLattice (mat_ZZ &matrix, RR omega) {
     mat_ZZ reducedLattice = fastJacobiMethod(matrix, omega);
+    matrix = reducedLattice;
+}
+
+void JacobiMethod::reduceLatticeDouble(newNTL::Mat<double> &matrix, newNTL::RR omega) {
+    Mat<double> reducedLattice = fastJacobiMethod(matrix, omega);
     matrix = reducedLattice;
 }
