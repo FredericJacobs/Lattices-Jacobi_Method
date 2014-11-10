@@ -191,6 +191,7 @@ bool doublelagrangeIT (Mat<double> &g, Mat<double> &z, int i, int j, RR &omega) 
     }
 
     g(l,l) -= q * g(l,s);
+    assert(g == z * transpose(z));
 
     return true;
 }
