@@ -10,15 +10,13 @@ using namespace std;
 using namespace newNTL;
 using namespace std::chrono;
 
-
 # pragma mark Utility Methods
 
 const long BENCHMARK_MATRIX_SIZE   = 30;
-const long BENCHMARK_MATRIX_BIT    = 10;
+const long BENCHMARK_MATRIX_BIT    = 8;
 
-const int  BENCHMARK_DIMENSION_MIN = 20;
-const int  BENCHMARK_DIMENSION_MAX = 400;
-
+const int  BENCHMARK_DIMENSION_MIN = 10;
+const int  BENCHMARK_DIMENSION_MAX = 15;
 
 RR computeHermiteFactor(mat_ZZ &mat) {
     RR numerator   = sqrt(normsq(mat(1)));
@@ -163,7 +161,7 @@ void generateHermiteDataRandomMatrix () {
 
 
     for (int i = BENCHMARK_DIMENSION_MIN ; i < BENCHMARK_DIMENSION_MAX; i=i+10) {
-        mat_ZZ randomMatrix  = MatrixFactory::makeRandomSquareMatrix(i, BENCHMARK_MATRIX_BIT);
+        mat_ZZ randomMatrix  = MatrixFactory::makeRandomSquareMatrixZZ(i, BENCHMARK_MATRIX_BIT);
         cout << "matrix gener" <<endl;
 
         /// Jacobi-Reduction
@@ -176,15 +174,6 @@ void generateHermiteDataRandomMatrix () {
         auto jacobiDuration = std::chrono::duration_cast<std::chrono::microseconds>(jacobiT2 - jacobiT1).count();
 
         jacobiDataFile << i << " " << computeHermiteFactor(jacobiReduced) << " " << computeOrthogonalityDefect(jacobiReduced) << " " << jacobiDuration << endl;
-//
-//        // LLL-reduction
-//        mat_ZZ lllReduced = randomMatrix;
-//        high_resolution_clock::time_point lllT1 = high_resolution_clock::now();
-//        LLL_fplll(lllReduced, 0.99);
-//        high_resolution_clock::time_point lllT2 = high_resolution_clock::now();
-//        auto lllDuration = std::chrono::duration_cast<std::chrono::microseconds>(lllT2-lllT1).count();
-
-//        lllDataFile << i << " " << computeHermiteFactor(lllReduced) << " " << computeOrthogonalityDefect(lllReduced) << " " << lllDuration << endl;
     }
 
     jacobiDataFile.close();
@@ -202,7 +191,6 @@ void generateHermiteDoubleDataRandomMatrix () {
         cout << "Hello loop" << endl;
         Mat<double> randomMatrix  = MatrixFactory::makeRandomSquareMatrixDouble(i, BENCHMARK_MATRIX_BIT);
 
-
         /// Jacobi-Reduction
         Mat<double> jacobiReduced = randomMatrix;
 
@@ -210,19 +198,25 @@ void generateHermiteDoubleDataRandomMatrix () {
         JacobiMethod::reduceLatticeDouble(jacobiReduced, 0.99);
         high_resolution_clock::time_point jacobiT2 = high_resolution_clock::now();
 
-        cout << "Done" << endl;
+        
         auto jacobiDuration = std::chrono::duration_cast<std::chrono::microseconds>(jacobiT2 - jacobiT1).count();
-        mat_ZZ jacobiReducedZZ = toMatZZ(jacobiReduced);
+        mat_ZZ jacobiReducedZZ;
+        conv(jacobiReducedZZ,jacobiReduced);
+      //  RR HF = computeHermiteFactor(jacobiReducedZZ);
+      //  RR OD = computeOrthogonalityDefect(jacobiReducedZZ);
+
         jacobiDataFile << i << " " << computeHermiteFactor(jacobiReducedZZ) << " " << computeOrthogonalityDefect(jacobiReducedZZ) << " " << jacobiDuration << endl;
 
         // LLL-reduction
-        mat_ZZ lllReduced = toMatZZ(randomMatrix);
-
+        mat_ZZ lllReduced;
+        conv(lllReduced, randomMatrix);
+        
         high_resolution_clock::time_point lllT1 = high_resolution_clock::now();
         LLL_fplll(lllReduced, 0.99);
         high_resolution_clock::time_point lllT2 = high_resolution_clock::now();
         auto lllDuration = std::chrono::duration_cast<std::chrono::microseconds>(lllT2-lllT1).count();
         lllDataFile << i << " " << computeHermiteFactor(lllReduced) << " " << computeOrthogonalityDefect(lllReduced) << " " << lllDuration << endl;
+        cout << "i = "  << i <<" ended" <<endl;
     }
 
     jacobiDataFile.close();
@@ -231,53 +225,6 @@ void generateHermiteDoubleDataRandomMatrix () {
 
 int main()
 {
-
-    
-   
-    generateHermiteDataRandomMatrix();
-
-    //LLL_fplll(randomMatrix);
     generateHermiteDoubleDataRandomMatrix();
-
-//
-  // mat_ZZ matrix = MatrixFactory::makeHNFMatrix(40, 20);
-//    //matrix(40,1)=1;//add very short vector 1,0,...,0,0,1
-//    //cout << " matrix contains short vector 1,0, ...,0,1" << endl;
-//
-//    mat_ZZ matrixJacobi = matrix;
-//
-//    cout << "LLL, dim 40" <<endl;
-  //  LLL_fplll(matrix);
-//
-  //  RR defectLLL  = computeOrthogonalityDefect(matrix);
-  //  RR hermiteLLL = computeHermiteFactor(matrix);
-  //  cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
-//    
-//  
-//
-//   matrix = MatrixFactory::makeHNFMatrix(100, 20);
-//    cout << "LLL, dim 100" <<endl;
-//    LLL_fplll(matrix);
-//    defectLLL  = computeOrthogonalityDefect(matrix);
-//    hermiteLLL = computeHermiteFactor(matrix);
-//    cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
-//
-//
-//    matrix = MatrixFactory::makeHNFMatrix(500, 20);
-//    LLL_fplll(matrix);
-//
-//    defectLLL  = computeOrthogonalityDefect(matrix);
-//     hermiteLLL = computeHermiteFactor(matrix);
-//    cout << "LLL, dim 500, seed 0" <<endl;
-//    cout << "defectLLL " << defectLLL <<" hermiteLLL " <<hermiteLLL <<" norm b1 " <<sqrt(normsq(matrix(1)))<<endl;
-//
-//
-//    cout << "Jacobi, dim 40, seed 0, matrix contains short vector 1,0, ...,0,1" << endl;
-//    JacobiMethod::reduceLattice(matrixJacobi);
-//    RR defectJacobi  = computeOrthogonalityDefect(matrixJacobi);
-//    RR hermiteJacobi = computeHermiteFactor(matrixJacobi);
-//    cout << "defectJacobi " << defectJacobi <<" hermiteJacobi " <<hermiteJacobi  <<" norm b1 " <<sqrt(normsq(matrixJacobi(1)))<<endl;
-
-
     return 0;
 }

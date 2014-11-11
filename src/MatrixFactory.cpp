@@ -63,6 +63,7 @@ vec_ZZ getRandomVectorZZ(long size, long bit) {
     return randomVec;
 }
 
+//ERROR: something is wrong here but we can use the ..ZZ function and a conv as well
 Vec<double> getRandomVectorDouble(long size, long bit) {
     Vec<double> randomVec;
     randomVec.SetLength(size);
@@ -86,9 +87,8 @@ Mat<double> MatrixFactory::makeRandomSquareMatrixDouble(long n, long bit) {
     do {
         SetSeed(getSeed());
 
-        for (int i = 1; i <= n; i++) {
-            randomMatrix(i) = getRandomVectorDouble(n, bit);
-        }
+        for (int i = 1; i <= n; i++)
+            conv(randomMatrix(i),getRandomVectorZZ(n, bit));
 
     } while (computeDeterminant(randomMatrix) == 0);
 

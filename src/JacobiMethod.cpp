@@ -180,7 +180,7 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
 
 #pragma mark Double Implementation
 
-bool doublelagrangeIT (Mat<double> &g, Mat<double> &z, int i, int j, RR &omega) {
+bool doublelagrangeIT (Mat<double> &g, Mat<double> &z, int i, int j, double &omega) {
     int s = i;
     int l = j;
 
@@ -204,12 +204,16 @@ bool doublelagrangeIT (Mat<double> &g, Mat<double> &z, int i, int j, RR &omega) 
     }
 
     g(l,l) -= q * g(l,s);
-    assert(g == z * transpose(z));
+    if(g != z * transpose(z)){
+        cerr<< "g " <<  g << endl;
+        cerr<<  "z z^t " << z *transpose(z) << endl;
+        exit(0);
+    }
 
     return true;
 }
 
-Mat<double> fastJacobiMethod(Mat<double> &basis, RR omega) {
+Mat<double> fastJacobiMethod(Mat<double> &basis, double omega) {
     int n = basis.NumRows();
     Mat<double> g = basis * transpose(basis);
     bool didReplace = true;
@@ -224,7 +228,7 @@ Mat<double> fastJacobiMethod(Mat<double> &basis, RR omega) {
         }
 
     }
-    cout <<count << "while loop passings"<<endl;
+    cout <<count << " while loop rounds"<<endl;
     return basis;
 }
 
@@ -235,7 +239,7 @@ void JacobiMethod::reduceLattice (mat_ZZ &matrix, RR omega) {
     matrix = reducedLattice;
 }
 
-void JacobiMethod::reduceLatticeDouble(newNTL::Mat<double> &matrix, newNTL::RR omega) {
+void JacobiMethod::reduceLatticeDouble(newNTL::Mat<double> &matrix, double omega) {
     Mat<double> reducedLattice = fastJacobiMethod(matrix, omega);
     matrix = reducedLattice;
 }
