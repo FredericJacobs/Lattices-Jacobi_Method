@@ -171,7 +171,7 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
         }
 
     }
-    cout <<count << " while loop runs"<<endl;
+    cout <<"fine Jacobi, " << count << " while loop runs"<<endl;
     return basis;
 }
 

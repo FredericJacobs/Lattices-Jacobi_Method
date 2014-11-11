@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/anjabecker/Documents/Forschung/shortvectorknapsack/Jacobimethod/lattice-reductions/main.cpp
+iostream
+-
+sstream
+-
+chrono
+-
+fstream
+-
+newNTL/LLL.h
+-
+newNTL/mat_ZZ.h
+-
+JacobiMethod.h
+/Users/anjabecker/Documents/Forschung/shortvectorknapsack/Jacobimethod/lattice-reductions/JacobiMethod.h
+MatrixFactory.h
+/Users/anjabecker/Documents/Forschung/shortvectorknapsack/Jacobimethod/lattice-reductions/MatrixFactory.h
+omp.h
+-
+
+include/JacobiMethod.h
+newNTL/mat_ZZ.h
+-
+newNTL/RR.h
+-
+
+include/MatrixFactory.h
+newNTL/LLL.h
+-
+newNTL/mat_ZZ.h
+-
+

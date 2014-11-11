@@ -18,8 +18,10 @@ ZZ getSeed(){
 
 mat_ZZ MatrixFactory::makeHNFMatrix(long n, long bit) {
 
+    ZZ seed = getSeed();
+    cout <<" seed " <<seed <<endl;
     vec_ZZ v;
-    generate_random_HNF(v,n,bit, getSeed());
+    generate_random_HNF(v,n,bit,seed );
     mat_ZZ B;
     B.SetDims(n,n);
     clear(B);
@@ -49,13 +51,11 @@ mat_ZZ MatrixFactory::makeRandomSquareMatrix(long n, long bit) {
     randomMatrix.SetDims(n,n);
 
     do {
-        SetSeed(getSeed());
-
         for (int i = 1; i <= n; i++) {
             randomMatrix(i) = getRandomVector(n, bit);
         }
     } while (determinant(randomMatrix) == 0);
 
-
+    //cout <<"random matrix: " << randomMatrix <<endl;
     return randomMatrix;
 }
