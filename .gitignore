@@ -1,6 +1,8 @@
 # Not synching binary
 
-JacobiMethod
+.DS_Store
+
+bin/*
 
 # Compiled Object files
 *.slo

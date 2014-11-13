@@ -7,7 +7,8 @@
 class MatrixFactory
 {
 public:
-    static newNTL::mat_ZZ      makeHNFMatrix(long n, long bit);
+    static newNTL::mat_ZZ      makeRandomHNFMatrix(long n, long bit);
+    static newNTL::mat_ZZ      makePrimeHNFMatrix(long n, long bit);
     static newNTL::Mat<double> makeRandomSquareMatrixDouble(long n, long bit);
     static newNTL::mat_ZZ      makeRandomSquareMatrixZZ(long n, long bit);
 protected:

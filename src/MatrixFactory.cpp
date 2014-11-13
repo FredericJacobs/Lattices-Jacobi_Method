@@ -33,12 +33,25 @@ RR computeDeterminant(Mat<double> &matrix){
     return determinant(matrixRR);
 }
 
-mat_ZZ MatrixFactory::makeHNFMatrix(long n, long bit) {
+mat_ZZ MatrixFactory::makeRandomHNFMatrix(long n, long bit){
+    SetSeed(getSeed());
 
+    mat_ZZ randomMatrix;
+    randomMatrix.SetDims(n, n);
+
+    for (int i = 1; i <= n; i++){
+        for (int j = i; j <= n; j++ ){
+            randomMatrix(j,i) = RandomBits_ZZ(bit);
+        }
+    }
+
+    return randomMatrix;
+}
+
+mat_ZZ MatrixFactory::makePrimeHNFMatrix(long n, long bit){
     ZZ seed = getSeed();
-    cout <<" seed " <<seed <<endl;
     vec_ZZ v;
-    generate_random_HNF(v,n,bit,seed );
+    generate_random_HNF(v,n,bit,seed);
     mat_ZZ B;
     B.SetDims(n,n);
     clear(B);
@@ -63,19 +76,6 @@ vec_ZZ getRandomVectorZZ(long size, long bit) {
     return randomVec;
 }
 
-//ERROR: something is wrong here but we can use the ..ZZ function and a conv as well
-Vec<double> getRandomVectorDouble(long size, long bit) {
-    Vec<double> randomVec;
-    randomVec.SetLength(size);
-    SetSeed(getSeed());
-
-    for (int i = 1; i <= size; i++) {
-        randomVec(i) = drand48()*DBL_MAX;
-    }
-
-    return randomVec;
-}
-
 Mat<double> MatrixFactory::makeRandomSquareMatrixDouble(long n, long bit) {
     ZZ base = 2;
     ZZ maxDouble;
@@ -92,9 +92,6 @@ Mat<double> MatrixFactory::makeRandomSquareMatrixDouble(long n, long bit) {
 
     } while (computeDeterminant(randomMatrix) == 0);
 
-    cout << " Generated Matrix for test: " << randomMatrix << endl;
-
-
     return randomMatrix;
 }
 
@@ -109,6 +106,5 @@ mat_ZZ MatrixFactory::makeRandomSquareMatrixZZ(long n, long bit) {
 
     } while (determinant(randomMatrix) == 0);
 
-    //cout <<"random matrix: " << randomMatrix <<endl;
     return randomMatrix;
 }
