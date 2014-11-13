@@ -1,1 +1,0 @@
-/opt/local/bin/g++    -std=c++11 -fopenmp -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/JacobiMethod.dir/main.cpp.o CMakeFiles/JacobiMethod.dir/src/JacobiMethod.cpp.o CMakeFiles/JacobiMethod.dir/src/MatrixFactory.cpp.o  -o JacobiMethod  /usr/local/lib/libnewntl.a /usr/local/lib/libmpfr.dylib /usr/local/lib/libgmp.dylib /usr/local/lib/libfplll.dylib 
