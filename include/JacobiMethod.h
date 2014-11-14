@@ -8,7 +8,7 @@ class JacobiMethod
 {
     public:
         static void reduceLatticeDouble (newNTL::Mat<double> &matrix,double omega = 0.9);
-        static void reduceLattice (newNTL::mat_ZZ &matrix, newNTL::RR omega = 0.9);
+        static long reduceLattice (newNTL::mat_ZZ &matrix, newNTL::RR omega = 0.9);
     protected:
     private:
 };

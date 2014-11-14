@@ -157,7 +157,7 @@ bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
 
 // Returns Z, the unimodular reduction matrix
 
-mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
+long fastJacobiMethod(mat_ZZ &basis, RR omega) {
     int n = basis.NumRows();
     mat_ZZ g = basis * transpose(basis);
     bool didReplace = true;
@@ -174,7 +174,7 @@ mat_ZZ fastJacobiMethod(mat_ZZ &basis, RR omega) {
 
     }
     cout <<"fine Jacobi, " << count << " while loop runs"<<endl;
-    return basis;
+    return count;
 }
 
 
@@ -234,9 +234,8 @@ Mat<double> fastJacobiMethod(Mat<double> &basis, double omega) {
 
 #pragma mark Reduce Lattice
 
-void JacobiMethod::reduceLattice (mat_ZZ &matrix, RR omega) {
-    mat_ZZ reducedLattice = fastJacobiMethod(matrix, omega);
-    matrix = reducedLattice;
+long JacobiMethod::reduceLattice (mat_ZZ &matrix, RR omega) {
+    return fastJacobiMethod(matrix, omega);
 }
 
 void JacobiMethod::reduceLatticeDouble(newNTL::Mat<double> &matrix, double omega) {
