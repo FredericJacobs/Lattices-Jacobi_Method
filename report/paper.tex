@@ -1,6 +1,10 @@
-\documentclass[12pt]{article}
+\documentclass[10pt]{article}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
 \title{Comparing the Jacobi Method and LLL lattice reduction algorithms for cryptographic applications}
-\date{Fall 2014}
+\date{Survey article\\ Fall 2014}
 \author{Frederic Jacobs\\ EPFL Bachelor Semester Project\\ frederic.jacobs@epfl.ch}
 
 \begin{document}
@@ -25,16 +29,78 @@ We show the following main results:
 \subsection{Related Work}
 
 \section{Preliminaries}
-\subsection{Integer lattice}
-2 pages
+
+In this section, we briefly cover the basics of lattice theory and reduction required in the scope of this article.
+
+\subsection{Lattice}
+
+We will define a lattice both formally an informally. 
+
+Informally\cite{lllAlgorithm}, a lattice can be defined as an infinite arrangement of points in $\mathbb{R}^n$ spaced with sufficient regularity that one can shift any point onto any other point by some symmetry of the arrangement.
+
+This can be translated into a more formal definition\cite{SchnorrStanfordNotes}.\newline 
+Let $b1, b2, ... b_n \in \mathbb{R}^m$ be linearly independent vectors. We call the additive subgroup
+
+\[
+L(b_1,b_2,...,b_n):= \displaystyle\sum_{i=1}^{n}b_i \mathbb{Z}
+\] of $\mathbb{R}^m$, a lattice with basis $b_1,b_2,...,b_n$.  
+
+The \emph{dimension of the lattice} is $dim(L) := rank(L) := n$. 
+
+We will work exclusively with full dimensional lattices. A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$. In other words, this means that we will work on matrices with $m$ linearly independent vectors.
+
+\subsubsection{Equivalent basis}
+
+As this article focuses on lattice basis reduction, it is important to define the equivalence of two bases. Two bases $B_1 , B_2$ are equivalent iff $B_2 = B_1 U$ for a unimodular matrix $U$.
+
+A \emph{unimodular matrix} $M$ is a square integer matrix such that $det(M) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $M$ results can result in the following elementary column operations:
 \begin{itemize}
-\item Lattice definition $b_i \in $ integer number$^n$
-\item Volume, Basis, dimension
-\item quality of reduction, size-reduction
-\item Hermite factor, orthogonality defect
-\item Hermite normal form, random lattice
-\item Pick random vectors to form an almost orthogonal basis
+\item Swap two columns
+\item Negate the elements of a column
+\item Addition of an integer multiple of one column to another
 \end{itemize}
+
+
+\subsubsection{Volume}
+
+The volume of a lattice is defined\cite{SchnorrStanfordNotes} as:
+\[
+\det L = \text{vol}_n \left. \Big( \displaystyle\sum_{i=1}^{n} t_i b_i \right| 0 \leq t_1, t_2 ..., t_n < 1 \Big)
+\]
+
+For the specific subset of lattices that we are studying, full dimensional lattices, the volume is equal to the determinant.
+
+\subsection{Quality of a reduction}
+
+In this section, we will discuss two lattice reduction quality indicators that we will use to compare reductions.
+
+\subsubsection{Orthogonality defect}
+The orthogonality defect of a basis $b_1, b_2,...,b_n$ of a lattice $L$ is given by
+\[
+    \text{OrthDefect}(L) := \frac{\displaystyle\prod^{n}_{i=1} \|b_i\| }{\det(L)}
+\]
+
+The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}.
+
+\subsubsection{Hermite Factor}
+The Hermite Factor, sometimes called Hermite constant, of a basis $b_1, b_2,...,b_n$ of a lattice $L$ is given by
+
+\[
+    \text{HF}(L) := \frac{\|a_1\|}{(\det(L))^{1/n}}
+\]
+
+The Hermite Factor is a quality indicator that we will use to compare the reduction of the \emph{shortest-vector}.
+
+\subsection{Special forms of Lattices}
+
+\subsubsection{Hermite Normal Form}
+
+The Hermite Normal Form representation of a matrix $M$ is unique. It is the analogue of the reduced echelon form for integer matrices.
+
+\subsubsection{Random Lattice}
+
+TODO
+
 \subsection{LLL}
 up to 1 page
 \begin{itemize}
