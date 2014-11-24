@@ -42,3 +42,9 @@ set logscale y
 plot "jacobiReductionData.txt" using 1:2 smooth bezier title "Jacobi after LLL, randomized omega", \
 "lllReductionData.txt" using 1:2 smooth bezier title "LLL(0.99)"
 
+# Drawing delta defect
+
+set output "defect-logscale-difference.png"
+set title "Difference in Orthogonality Defect"
+set style data lines
+plot "mergedDataFile.txt" using 1:($2-$6) smooth bezier title "LLL defect - (Jacobi after LLL defect)"
