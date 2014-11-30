@@ -2,10 +2,13 @@
 
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{color}
+\newcommand{\my}[1]{{\color{blue} #1 }}
 
 \title{Comparing the Jacobi Method and LLL lattice reduction algorithms for cryptographic applications}
-\date{Survey article\\ Fall 2014}
+\date{Fall 2014}
 \author{Frederic Jacobs\\ EPFL Bachelor Semester Project\\ frederic.jacobs@epfl.ch}
+
 
 \begin{document}
 
@@ -32,83 +35,147 @@ We show the following main results:
 
 In this section, we briefly cover the basics of lattice theory and reduction required in the scope of this article.
 
-\subsection{Lattice}
+\subsection{Lattice, also called Euclidean lattice}
 
-We will define a lattice both formally an informally. 
-
-Informally\cite{lllAlgorithm}, a lattice can be defined as an infinite arrangement of points in $\mathbb{R}^n$ spaced with sufficient regularity that one can shift any point onto any other point by some symmetry of the arrangement.
+Informally, a lattice can be defined as the infinite set of intersection points of an infinite grid.
 
 This can be translated into a more formal definition\cite{SchnorrStanfordNotes}.\newline 
-Let $b1, b2, ... b_n \in \mathbb{R}^m$ be linearly independent vectors. We call the additive subgroup
+Let $b_1, b_2, ... b_n \in \mathbb{R}^m$ be linearly independent vectors. We call the additive subgroup
 
 \[
 L(b_1,b_2,...,b_n):= \displaystyle\sum_{i=1}^{n}b_i \mathbb{Z}
-\] of $\mathbb{R}^m$, a lattice with basis $b_1,b_2,...,b_n$.  
+\] of $\mathbb{R}^m$, a lattice with basis $b_1,b_2,...,b_n$.
+
+A lattice that has $b_1,b_2,...,b_n$ as basis vectors will be noted in matrix form as $B$ where each vector $b_i$ is a column of the matrix.
 
 The \emph{dimension of the lattice} is $dim(L) := rank(L) := n$. 
 
-We will work exclusively with full dimensional lattices. A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$. In other words, this means that we will work on matrices with $m$ linearly independent vectors.
+We will work exclusively with full dimensional lattices. A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$. In other words, this means that we will work on matrices with $m=n$ linearly independent vectors.
 
-\subsubsection{Equivalent basis}
+\subsubsection{Equivalent bases}
 
 As this article focuses on lattice basis reduction, it is important to define the equivalence of two bases. Two bases $B_1 , B_2$ are equivalent iff $B_2 = B_1 U$ for a unimodular matrix $U$.
 
-A \emph{unimodular matrix} $M$ is a square integer matrix such that $det(M) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $M$ results can result in the following elementary column operations:
+A \emph{unimodular matrix} $U$ is a square integer matrix such that $det(U) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $U$ results can result in a combination following elementary column operations:
 \begin{itemize}
 \item Swap two columns
 \item Negate the elements of a column
 \item Addition of an integer multiple of one column to another
 \end{itemize}
 
-
 \subsubsection{Volume}
 
-The volume of a lattice is defined\cite{SchnorrStanfordNotes} as:
+The volume of a lattice, also known as the determinant of the lattice, is defined as:
 \[
-\det L = \text{vol}_n \left. \Big( \displaystyle\sum_{i=1}^{n} t_i b_i \right| 0 \leq t_1, t_2 ..., t_n < 1 \Big)
+\text{vol} \,L = \sqrt{\det(B^T B)}
+\] where $B$ is a matrix of the lattice's basis vectors.
+
+
+The determinant of an unimodular matrix being $\pm 1$, the determinant is an invariant under change of basis. Therefore the volume of a lattice is an invariant under change of basis.
+
+Since we will be studying full dimensional lattices, the number of basis vectors will be equal to the dimension of the lattice and hence, the volume of the lattice can be computed by taking the absolute value of the determinant.
+
+For full dimensional lattices, the volume can be computed:
+\[
+\text{vol} \,L_{\text{full}} = |\det B|
+\] where $B$ is a matrix of the linearly independent lattice's basis vectors.
+
+
+\subsubsection{Minkowski's Convex Body Theorem}
+
+Minkowski's Convex Body Theorem tells us that for a full-rank lattice $L$ of $\mathbb{R}^n$. Let $C$ be a measurable subset of $\mathbb{R}^n$, convex, symmetric with respect to 0, and of measure $> 2^n \text{vol}(L)$. Then $C$ contains at least a nonzero point of the lattice $L$.
+
+A corollary of Minkowski's theorem tells us that there exists for any $n$-dimensional full-rank lattice $L$ a nonzero vector $x$ such that
+
+\[
+\lambda_1(L) \leq \sqrt{n} (\det L)^{1/n}
 \]
 
-For the specific subset of lattices that we are studying, full dimensional lattices, the volume is equal to the determinant.
+This gives us an upper-bound of the shortest vector in a lattice.
+
+\subsubsection{Hermite Normal Form}
+
+The \emph{Hermite Normal Form} representation of a basis matrix $B$, abbreviated \emph{HNF (B)}, is unique. It is the analogue of the reduced echelon form for integer matrices.
+
+A matrix $[a_{ij}] \in M_{m,n} (\mathbb{R})$ with $m \leq n$ is in HNF when\cite{SchnorrStanfordNotes} :
+\begin{enumerate}
+\item $a_{ij} = 0$ for $j > i$, i.e. $A$ is lower triangular. 
+\item $a_{ii} > 0$ for $i=1,2,...,m$
+\item $0 \leq a_{ij} < a_{ii}$ for $j < i$
+\end{enumerate}
+
+\subsection{Special Lattices}
+
+\subsubsection{Random Lattice}
+TODO: Still unsure about how to phrase it
+
+ressources from Nicolas:
+A few (understandable) papers on random lattices:
+
+- D. Goldstein and A. Mayer. On the equidistribution of Hecke points.
+Forum Math., 15(2):165–189, 2003.
+
+basically, proves that random HNFs converge to the Haar Measure
+
+- Random lattices and a conjectured 0 -1 law about their polynomial time
+computable properties, Ajtai, FOCS 2002
+
+gives the interpretation that for any property verifiable in polynomial
+time,
+if the property is asymptotically true with x percent on the HNF random
+integer lattices when the dimension grow,
+then the property is true with x percent on the Haar measure.
+
+\subsubsection{Nearly Orthogonal Lattice Bases}
+
+We define a \emph{nearly orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as a $nxn$ square matrix whose entries are $k$-bits picked at random. These lattices are frequently used for signal processing applications\cite{originalJacobiMethodLatticeBasisReduction}.
+
+\subsection{Lattice Reduction}
+
+Lattice reduction is the process of finding nearly orthogonal vectors from an integer lattice basis. Giving an exact definition of "nearly orthogonal vectors" is tricky and each reduction algorithm is likely to give it's own definition of what it means for a basis to be reduced.
 
 \subsection{Quality of a reduction}
 
-In this section, we will discuss two lattice reduction quality indicators that we will use to compare reductions.
+In this section, we will discuss two lattice reduction quality indicators that we will use to compare the result of reduction algorithms.
 
-\subsubsection{Orthogonality defect}
-The orthogonality defect of a basis $b_1, b_2,...,b_n$ of a lattice $L$ is given by
+\subsubsection{Orthogonality defect of a basis}
+The \emph{orthogonality defect} of a basis $b_1, b_2,...,b_n$ of a lattice $L$ is defined by:
 \[
     \text{OrthDefect}(L) := \frac{\displaystyle\prod^{n}_{i=1} \|b_i\| }{\det(L)}
 \]
 
-The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}.
+The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}. The orthogonality defect can be interpreted geometrically as the product of the basis vector lengths divided by the volume of the lattice. As the basis vectors are getting increasingly orthogonal during a reduction, the nominator will become smaller. The lower bound of the orthogonality defect is $\det B \ge 1$. If $\det B = 1$, the basis is completely orthogonal.
 
-\subsubsection{Hermite Factor}
-The Hermite Factor, sometimes called Hermite constant, of a basis $b_1, b_2,...,b_n$ of a lattice $L$ is given by
+\subsubsection{Hermite factor of a basis}
+The \emph{Hermite Factor}, sometimes referred to as \emph{Hermite's constant} of basis vectors $b_1, b_2,...,b_n$ of a lattice $L$ is defined by
 
 \[
-    \text{HF}(L) := \frac{\|a_1\|}{(\det(L))^{1/n}}
+    \text{HF}(L) := \frac{\|b_1\|}{\sqrt[n]{\det(L)}}
 \]
 
 The Hermite Factor is a quality indicator that we will use to compare the reduction of the \emph{shortest-vector}.
 
-\subsection{Special forms of Lattices}
+\subsection{Lattice Hard Problems}
 
-\subsubsection{Hermite Normal Form}
+Lattices have a few known hard problems that can be used for asymmetric cryptography. We will only cover the most famous one, the Shortest Vector Problem.
 
-The Hermite Normal Form representation of a matrix $M$ is unique. It is the analogue of the reduced echelon form for integer matrices.
+\subsubsection{Shortest Vector Problem (SVP)}
 
-\subsubsection{Random Lattice}
+Given a basis of a $n$-rank integral lattice $L$, find $u \in L$ such that $\|u\| = \lambda_1 (L)$
 
-TODO
+In other words, we are looking for the shortest vector of the lattice. Finding exactly the shortest vector of a lattice is known to be NP-hard under randomized reductions\cite{Ajtai:1998:SVP} but the complexity of the deterministic reduction remains open.
 
-\subsection{LLL}
-up to 1 page
+\section{The LLL Algorithm}
+
+LLL 
+
 \begin{itemize}
 \item Criteria for reduction
 \item Basic steps on algorithm: exchange, reduction
 \end{itemize}
 
-\section{Our Fast Jacobi Method Implementation}
+\section{The Fast Jacobi Method}
+\subsection{Our implementation}
 
 \section{Conclusions}
 
