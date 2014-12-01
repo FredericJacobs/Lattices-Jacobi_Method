@@ -1,5 +1,4 @@
 \documentclass[10pt]{article}
-
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{color}
@@ -9,6 +8,7 @@
 \date{Fall 2014}
 \author{Frederic Jacobs\\ EPFL Bachelor Semester Project\\ frederic.jacobs@epfl.ch}
 
+\renewcommand{\vec}[1]{\mathbf{#1}}
 
 \begin{document}
 
@@ -19,8 +19,6 @@ In this \cite{originalJacobiMethodLatticeBasisReduction}
 \end{abstract}
 
 \section{Introduction}
-
-
 \subsection{Results and Contributions}
 
 We show the following main results:
@@ -28,27 +26,37 @@ We show the following main results:
 \item An analysis of running times depending on factors
 \end{itemize}
 
-
 \subsection{Related Work}
 
 \section{Preliminaries}
 
 In this section, we briefly cover the basics of lattice theory and reduction required in the scope of this article.
 
+\subsection{Euclidean norm}
+
+The Euclidean norm in $\mathbb{R}^n$ is a mapping from $\mathbb{R}^n \to \mathbb{R}$ that assigns the length to any vector of the space.
+
+The mapping is defined for any vector of $\mathbb{R}^n$ as follows: 
+
+\[
+\|\mathbf{b}\| = \sqrt{b_1^2 + b_2^2 + ... + b_n^2} 
+\] 
+as a consequence of the Pythagorean theorem
+
 \subsection{Lattice, also called Euclidean lattice}
 
 Informally, a lattice can be defined as the infinite set of intersection points of an infinite grid.
 
 This can be translated into a more formal definition\cite{SchnorrStanfordNotes}.\newline 
-Let $b_1, b_2, ... b_n \in \mathbb{R}^m$ be linearly independent vectors. We call the additive subgroup
+Let $\vec{b_1}, \vec{b_2}, ... \vec{b_n} \in \mathbb{R}^m$ be linearly independent vectors. We call the additive subgroup
 
 \[
-L(b_1,b_2,...,b_n):= \displaystyle\sum_{i=1}^{n}b_i \mathbb{Z}
+L(\vec{b_1}, \vec{b_2},..., \vec{b_n}):= \displaystyle\sum_{i=1}^{n} \vec{b_i} \mathbb{Z}
 \] of $\mathbb{R}^m$, a lattice with basis $b_1,b_2,...,b_n$.
 
-A lattice that has $b_1,b_2,...,b_n$ as basis vectors will be noted in matrix form as $B$ where each vector $b_i$ is a column of the matrix.
+A lattice that has $\vec{b_1},\vec{b_2},...,\vec{b_n}$ as basis vectors will be noted in matrix form as $B$ where each vector $\vec{b_i}$ is a column of the matrix.
 
-The \emph{dimension of the lattice} is $dim(L) := rank(L) := n$. 
+The \emph{dimension of the lattice} is $dim(L) := rank(L) := n$.
 
 We will work exclusively with full dimensional lattices. A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$. In other words, this means that we will work on matrices with $m=n$ linearly independent vectors.
 
@@ -107,6 +115,18 @@ A matrix $[a_{ij}] \in M_{m,n} (\mathbb{R})$ with $m \leq n$ is in HNF when\cite
 \subsection{Special Lattices}
 
 \subsubsection{Random Lattice}
+
+
+
+
+
+- lattice prime determinant p 
+- unique HNF form
+- 1 on the other places of the diagonal
+- all entries under the p are smaller than P in absolute value.
+
+---> 
+
 TODO: Still unsure about how to phrase it
 
 ressources from Nicolas:
@@ -128,7 +148,7 @@ then the property is true with x percent on the Haar measure.
 
 \subsubsection{Nearly Orthogonal Lattice Bases}
 
-We define a \emph{nearly orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as a $nxn$ square matrix whose entries are $k$-bits picked at random. These lattices are frequently used for signal processing applications\cite{originalJacobiMethodLatticeBasisReduction}.
+We define a \emph{nearly orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as a $n \times n$ square matrix whose entries are $k$-bits picked at random. These lattices are frequently used for signal processing applications\cite{originalJacobiMethodLatticeBasisReduction}.
 
 \subsection{Lattice Reduction}
 
@@ -139,18 +159,18 @@ Lattice reduction is the process of finding nearly orthogonal vectors from an in
 In this section, we will discuss two lattice reduction quality indicators that we will use to compare the result of reduction algorithms.
 
 \subsubsection{Orthogonality defect of a basis}
-The \emph{orthogonality defect} of a basis $b_1, b_2,...,b_n$ of a lattice $L$ is defined by:
+The \emph{orthogonality defect} of a basis $\vec{b_1},\vec{b_2},...,\vec{b_n}$ of a lattice $L$ is defined by:
 \[
-    \text{OrthDefect}(L) := \frac{\displaystyle\prod^{n}_{i=1} \|b_i\| }{\det(L)}
+    \text{OrthDefect}(L) := \frac{\displaystyle\prod^{n}_{i=1} \|\vec{b_i}\| }{\det(L)}
 \]
 
 The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}. The orthogonality defect can be interpreted geometrically as the product of the basis vector lengths divided by the volume of the lattice. As the basis vectors are getting increasingly orthogonal during a reduction, the nominator will become smaller. The lower bound of the orthogonality defect is $\det B \ge 1$. If $\det B = 1$, the basis is completely orthogonal.
 
 \subsubsection{Hermite factor of a basis}
-The \emph{Hermite Factor}, sometimes referred to as \emph{Hermite's constant} of basis vectors $b_1, b_2,...,b_n$ of a lattice $L$ is defined by
+The \emph{Hermite Factor} of basis vectors $\vec{b_1}, \vec{b_2},...,\vec{b_n}$ of a lattice $L$ is defined by
 
 \[
-    \text{HF}(L) := \frac{\|b_1\|}{\sqrt[n]{\det(L)}}
+    \text{HF}(L) := \frac{\|\vec{b_1}\|}{\sqrt[n]{\det(L)}}
 \]
 
 The Hermite Factor is a quality indicator that we will use to compare the reduction of the \emph{shortest-vector}.
@@ -161,13 +181,29 @@ Lattices have a few known hard problems that can be used for asymmetric cryptogr
 
 \subsubsection{Shortest Vector Problem (SVP)}
 
-Given a basis of a $n$-rank integral lattice $L$, find $u \in L$ such that $\|u\| = \lambda_1 (L)$
+Given a basis of a $n$-rank integral lattice $L$, find $\vec{u} \in L$ such that $\|\vec{u}\| = \lambda_1 (L)$
 
 In other words, we are looking for the shortest vector of the lattice. Finding exactly the shortest vector of a lattice is known to be NP-hard under randomized reductions\cite{Ajtai:1998:SVP} but the complexity of the deterministic reduction remains open.
 
+\subsection{Gram-Schmidt orthogonalization process}
+The \emph{Gram-Schmidt orthogonalization (\emph GSO) process} is a method for orthonormalising a set of vectors. Two vectors are orthonormal if they are both orthogonal and unit vectors. 
+
+The GSO process  can be defined recursively:
+\[
+\begin{cases}
+\vec{b_1}^{\star} = \vec{b_i}  \\
+\vec{b_i}^{\star} = \displaystyle\sum^{i-1}_{j=1} \mu_{i,j} \vec{b}
+\end{cases}
+\]
+
+
+We define the Gram-Schmidt process as a method for orthnomomalising a set of vectors 
+
+the Gram–Schmidt process is a method for orthonormalising a set of vectors in an inner product space, most commonly the Euclidean space Rn
+
 \section{The LLL Algorithm}
 
-LLL 
+
 
 \begin{itemize}
 \item Criteria for reduction
