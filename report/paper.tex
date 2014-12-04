@@ -1,8 +1,17 @@
-\documentclass[10pt]{article}
+\documentclass[10pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{amsfonts}
+\usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath}
 \usepackage{color}
 \newcommand{\my}[1]{{\color{blue} #1 }}
+
+\floatname{algorithm}{Procedure}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
 
 \title{Comparing the Jacobi Method and LLL lattice reduction algorithms for cryptographic applications}
 \date{Fall 2014}
@@ -45,7 +54,7 @@ as a consequence of the Pythagorean theorem
 
 \subsection{Lattice, also called Euclidean lattice}
 
-Informally, a lattice can be defined as the infinite set of intersection points of an infinite grid.
+Informally, a lattice can be defined as the infinite set of intersection points of an infinite regular grid.
 
 This can be translated into a more formal definition\cite{SchnorrStanfordNotes}.\newline 
 Let $\vec{b_1}, \vec{b_2}, ... \vec{b_n} \in \mathbb{R}^m$ be linearly independent vectors. We call the additive subgroup
@@ -196,21 +205,57 @@ The GSO process  can be defined recursively:
 \end{cases}
 \]
 
-
-We define the Gram-Schmidt process as a method for orthnomomalising a set of vectors 
-
-the Gram–Schmidt process is a method for orthonormalising a set of vectors in an inner product space, most commonly the Euclidean space Rn
-
 \section{The LLL Algorithm}
 
+The LLL algorithm\cite{lllpaper} was the first polynomial-time reduction algorithm to be introduced outputting a nearly orthogonal basis. LLL is believed to be the most efficient reduction approximation algorithm to date\cite{lllAlgorithm}.
 
-
+\subsection{$\delta$-LLL Reduced}
+We say that a basis is $\delta$-LLL reduced if:
 \begin{itemize}
-\item Criteria for reduction
-\item Basic steps on algorithm: exchange, reduction
+\item $| \mu_{i,j}| \leq \frac{1}{2} \text{, } \forall i > j$
+\item Lovász's condition: $\forall (\vec{b_i, b_{i+1}})$, we have $(\delta - \mu^2_{i+1,i}) \|\vec{b}^{\star}_{i}\|^2 \leq \| \vec{b}^{\star}_{i+1} \|^2$
 \end{itemize}
 
+The Lovász conditions assures us that although the Gram-Schmidt vectors can get shorter and shorter, their length in a sorted basis cannot decrease too quickly.
+
+Since the LLL-reduction algorithm returns a $\delta$-LLL reduced basis, we can observe the following properties on the basis:
+\begin{itemize}
+\item $\| \vec{b_1} \| \leq \alpha^{(n-1)/2} \lambda_1 $
+\item $\max_i \| \vec{b_1} \| \leq \alpha^{(n-1)/2} \lambda_n $
+\item $\| b_1 \| \leq \alpha^{(n-1)/4} \det \vec{B}^{1/n}$
+\end{itemize} 
+where the parameter $\alpha = 1/(\delta - \frac{1}{4})$. Since $\delta$ is bounded by $1/4 < \delta < 1$, parameter $\alpha \geq 4/3$.
+
+\subsection{LLL overview}
+
+The LLL algorithm, like many reduction algorithms, can be broken down into two parts: size-reduction and vector swapping. Size-reduction reduces the vectors from the input basis. After that, the vectors of the basis are checked against the Lovász condition. If a pair of vectors of the basis $(\vec{b_{i}}, \vec{b_{i+1}})$ don't satisfy the condition, we swap them and go back to the size reduction.
+
+\begin{algorithm}[H]
+\caption{Overview of naive-iterative LLL}
+\label{lllAlgorithm}
+\begin{algorithmic}[1]
+\REQUIRE a basis ($\vec{b_1, ..., b_n}$) of a lattice $L$.
+\ENSURE $\delta$-LLL reduced basis $(\vec{b_1, ..., b_n})$
+
+\STATE Size-reduce $(\vec{b_1, ..., b_n})$
+\IF{there exists an index $j$ which does not satisfy Lovász' condition} \STATE{swap $\vec{b_j}$ and $\vec{b_{j+1}}$, go back to step 1} \ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
 \section{The Fast Jacobi Method}
+\subsection{Lagrange-reduced basis}
+
+Lagrange was the first to formalize\cite{lagrangeArithmetique} the notion of reduction for rank-two lattices.
+
+Let $L$ be a two-rank lattice of $\mathbb{R}^n$. A basis $(\vec{b_1}, \vec{b_2})$ of $L$ is said to be Lagrange-reduced if and only if $\|\vec{b_1}\| \leq \|\vec{b_2}\|$ and $| \langle \vec{b_1} \vec{b_2} \rangle | \leq \| \vec{b_1} \|^2 / 2 $. 
+
+\subsection{Lagrange algorithm}
+
+Reducing 
+
+Complexity quadratic
+
 \subsection{Our implementation}
 
 \section{Conclusions}
