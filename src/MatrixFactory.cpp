@@ -1,3 +1,5 @@
+
+#include <cstddef>
 #include "MatrixFactory.h"
 #include <newNTL/LLL.h>
 #include <newNTL/mat_ZZ.h>

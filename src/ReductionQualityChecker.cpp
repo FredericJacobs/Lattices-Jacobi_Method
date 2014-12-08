@@ -1,3 +1,4 @@
+#include <cstddef>
 #include "ReductionQualityChecker.h"
 
 using namespace std;

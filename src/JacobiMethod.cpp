@@ -1,5 +1,5 @@
 #include "JacobiMethod.h"
-
+#include <cstddef>
 using namespace std;
 using namespace newNTL;
 
@@ -10,6 +10,7 @@ using namespace newNTL;
 #include <newNTL/mat_ZZ.h>
 #include <newNTL/vec_ZZ.h>
 #include <newNTL/vector.h>
+#include "ReductionQualityChecker.h"
 
 #pragma mark Lagrange Algorithm
 bool verbose =false;
@@ -158,10 +159,12 @@ bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
 // Returns Z, the unimodular reduction matrix
 
 long fastJacobiMethod(mat_ZZ &basis, RR omega) {
-    int n = basis.NumRows();
+        int n = basis.NumRows();
+    cout << "dim "<<n  <<endl;
     mat_ZZ g = basis * transpose(basis);
     bool didReplace = true;
     long count = 0;
+    RR prevortho=0;
     while(didReplace){
         count++;
         if(count%1000==0)cout << count<<" ";
@@ -171,9 +174,13 @@ long fastJacobiMethod(mat_ZZ &basis, RR omega) {
                 didReplace =  didReplace || lagrangeIT(g, basis, i, j, omega);
             }
         }
-
+        if(!(count%10)){
+            RR currentortho = ReductionQualityChecker::computeOrthogonalityDefect(basis);
+            cout <<  "  " <<count << " "  << prevortho - currentortho <<endl;
+            prevortho = currentortho;
+        }
     }
-    cout <<"fine Jacobi, " << count << " while loop runs"<<endl;
+    cout <<"end " << count << " loops "<<  ReductionQualityChecker::computeOrthogonalityDefect(basis) << " defect " <<endl;
     return count;
 }
 
@@ -226,7 +233,7 @@ Mat<double> fastJacobiMethod(Mat<double> &basis, double omega) {
                 didReplace =  didReplace || doublelagrangeIT(g, basis, i, j, omega);
             }
         }
-
+       
     }
     cout <<count << " while loop rounds"<<endl;
     return basis;

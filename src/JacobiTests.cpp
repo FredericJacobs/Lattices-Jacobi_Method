@@ -1,14 +1,13 @@
 #include <iostream>
 #include <sstream>
-#include <chrono>
 #include <fstream>
+#include <cstddef>
 #include <newNTL/LLL.h>
-#include <ReductionQualityChecker.h>
+#include "ReductionQualityChecker.h"
 #include "JacobiMethod.h"
 #include "MatrixFactory.h"
-
 #include "macros.h"
-
+#include <chrono>
 using namespace std;
 using namespace newNTL;
 using namespace std::chrono;
@@ -201,9 +200,9 @@ void generateHermiteDoubleDataRandomMatrix () {
     jacobiDataFile.close();
     lllDataFile.close();
 }
-
-int main()
-{
-    generateHermiteDoubleDataRandomMatrix();
-    return 0;
-}
+//
+//int main()
+//{
+//    //generateHermiteDoubleDataRandomMatrix();
+//    return 0;
+//}

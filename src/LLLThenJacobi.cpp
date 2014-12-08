@@ -1,7 +1,10 @@
+
+#include <cstddef>
 #include "macros.h"
 #include "MatrixFactory.h"
 #include "JacobiMethod.h"
 #include <fstream>
+
 #include <iostream>
 #include <sstream>
 #include <chrono>
@@ -97,7 +100,7 @@ double testLLLReductionRandomDimension (int dimension){
 
 
         double omega_min  = 0.75;
-        double omega_max  = 0.99;
+        double omega_max  = 0.95;
         double iterations = (omega_max*100) - (omega_min*100);
 
         vec_RR JorthogonalityDefectsJacobi;
@@ -227,6 +230,107 @@ double testLLLReductionRandom (double omega){
 }
 
 
+double LLLJacobiOrtho(int dimension){
+    
+    cout << "Starting reduction of dimension " << dimension << endl;
+    
+    ofstream jacobiDataFile, lllDataFile;
+    
+    jacobiDataFile.open ("jacobiReductionData.txt", ios::app);
+    lllDataFile.open("lllReductionData.txt",    ios::app);
+    
+    int testsToRun = 50;
+    
+    vec_RR orthogonalityLLL;
+    vec_RR orthogonalityJacobi;
+    vec_RR hermiteLLL;
+    vec_RR hermiteJacobi;
+    
+    vec_double timeJacobi;
+    vec_double timeLLL;
+    
+    vec_double countsJacobi;
+    
+    orthogonalityJacobi.SetLength(testsToRun);
+    orthogonalityLLL.SetLength(testsToRun);
+    hermiteJacobi.SetLength(testsToRun);
+    hermiteLLL.SetLength(testsToRun);
+    timeJacobi.SetLength(testsToRun);
+    timeLLL.SetLength(testsToRun);
+    countsJacobi.SetLength(testsToRun);
+    
+    for (int i = 1; i <= testsToRun; i++){
+        
+        cout << "Running loop " << i << " for dimension " << dimension << endl;
+        
+        // - take an HNF basis of a random lattice
+        
+        mat_ZZ mat = MatrixFactory::makePrimeHNFMatrix(dimension, BITS_SIZE);
+        
+        mat_ZZ reducedMat = mat;
+        
+        // - reduce the basis with LLL
+        
+        high_resolution_clock::time_point lllT1= high_resolution_clock::now();
+        LLL_fplll(reducedMat);
+        high_resolution_clock::time_point lllT2 = high_resolution_clock::now();
+        
+        double lllDuration = std::chrono::duration_cast<std::chrono::microseconds>(lllT2 - lllT1).count();
+        timeLLL(i) = lllDuration;
+        
+        // - compute HF and orthogonality defect (OD)
+        
+        orthogonalityLLL(i) = orthogonalityDefect(reducedMat);
+        hermiteLLL(i) = hermiteFactor(reducedMat);
+        
+        // - reduce the LLL-reduced basis and check if HF and OD are better <== I assume you mean with Jacobi?
+        
+        
+        double omega_min  = 0.98;
+        double omega_max  = 0.999;
+        double iterations = (omega_max*100) - (omega_min*100);
+        
+        vec_RR JorthogonalityDefectsJacobi;
+        vec_RR JhermiteFactorsJacobi;
+        vec_double JreductionTime;
+        vec_double JjacobiIterations;
+        
+        JorthogonalityDefectsJacobi.SetLength(iterations);
+        JhermiteFactorsJacobi.SetLength(iterations);
+        JreductionTime.SetLength(iterations);
+        JjacobiIterations.SetLength(iterations);
+        
+        mat_ZZ lllReducedMat = reducedMat;
+        
+        for (double j = 1; j <= iterations; j++){
+            double omega = omega_min+(j/100);
+            
+            cout << "Running reduction on jacobi with omega " << omega << endl;
+            
+            mat_ZZ reductionMat = lllReducedMat;
+            
+            high_resolution_clock::time_point jacobiT1= high_resolution_clock::now();
+            double count = JacobiMethod::reduceLattice(reductionMat, omega);
+            high_resolution_clock::time_point jacobiT2 = high_resolution_clock::now();
+            
+            double jacobiDuration = std::chrono::duration_cast<std::chrono::microseconds>(jacobiT2 - jacobiT1).count();
+            
+            JreductionTime(j)              = jacobiDuration;
+            JjacobiIterations(j)           = count;
+            JorthogonalityDefectsJacobi(j) = orthogonalityDefect(reductionMat);
+            JhermiteFactorsJacobi(j)       = hermiteFactor(reductionMat);
+        }
+        
+        orthogonalityJacobi(i) = computeAverageRR(JorthogonalityDefectsJacobi);
+        hermiteJacobi(i)       = computeAverageRR(JhermiteFactorsJacobi);
+        timeJacobi(i)          = computeAverageDouble(JreductionTime);
+        countsJacobi(i)        = computeAverageDouble(JjacobiIterations);
+    }
+    
+    jacobiDataFile << dimension << " " << computeAverageRR(orthogonalityJacobi) << " " << computeAverageRR(hermiteJacobi) << " " << computeAverageDouble(timeJacobi) << " " << computeAverageDouble(countsJacobi) << endl;
+    lllDataFile    << dimension << " " << computeAverageRR(orthogonalityLLL)    << " " << computeAverageRR(hermiteLLL)    << " " << computeAverageDouble(timeLLL)    << endl;
+}
+
 
 
 int main() {
@@ -239,14 +343,10 @@ int main() {
     jacobiDataFile.close();
     lllDataFile.close();
 
-   /* for (double i = 0.6; i <= 1; i= i+0.01){
-        testLLLReductionRandom(i);
+    for (int dimension = 100; dimension <= 100; dimension += 5){
+        LLLJacobiOrtho(dimension);
     }
-*/
 
-    for (int dimension = 50; dimension <= 150; dimension += 5){
-        testLLLReductionRandomDimension(dimension);
-    }
 
 
     return 0;
