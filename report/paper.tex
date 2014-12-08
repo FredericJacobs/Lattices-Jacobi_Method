@@ -12,7 +12,7 @@
 \floatname{algorithm}{Procedure}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
-
+ 
 \title{Comparing the Jacobi Method and LLL lattice reduction algorithms for cryptographic applications}
 \date{Fall 2014}
 \author{Frederic Jacobs\\ EPFL Bachelor Semester Project\\ frederic.jacobs@epfl.ch}
@@ -125,35 +125,12 @@ A matrix $[a_{ij}] \in M_{m,n} (\mathbb{R})$ with $m \leq n$ is in HNF when\cite
 
 \subsubsection{Random Lattice}
 
+We say that a lattice is a random lattice $L$ if under HNF form its basis matrix $\vec{B}$ has the following properties:
 
-
-
-
-- lattice prime determinant p 
-- unique HNF form
-- 1 on the other places of the diagonal
-- all entries under the p are smaller than P in absolute value.
-
----> 
-
-TODO: Still unsure about how to phrase it
-
-ressources from Nicolas:
-A few (understandable) papers on random lattices:
-
-- D. Goldstein and A. Mayer. On the equidistribution of Hecke points.
-Forum Math., 15(2):165–189, 2003.
-
-basically, proves that random HNFs converge to the Haar Measure
-
-- Random lattices and a conjectured 0 -1 law about their polynomial time
-computable properties, Ajtai, FOCS 2002
-
-gives the interpretation that for any property verifiable in polynomial
-time,
-if the property is asymptotically true with x percent on the HNF random
-integer lattices when the dimension grow,
-then the property is true with x percent on the Haar measure.
+\begin{itemize}
+\item the diagonal has 1 for all it's entries except a prime number $P$. Hence, the $\det(\vec{B})$ is prime.
+\item All entries of the matrix under $P$ are smaller than $P$ in absolute value.
+\end{itemize}
 
 \subsubsection{Nearly Orthogonal Lattice Bases}
 
@@ -243,7 +220,10 @@ The LLL algorithm, like many reduction algorithms, can be broken down into two p
 \end{algorithmic}
 \end{algorithm}
 
-\section{The Fast Jacobi Method}
+\section{The Jacobi Method}
+
+In 2012, Sanzheng Qiao suggested to use a Jacobi method for lattice basis reduction\cite{originalJacobiMethodLatticeBasisReduction}. The idea of the Jacobi method is to use the reduce larger dimension lattice basis by using the Lagrange algorithm iteratively.
+
 \subsection{Lagrange-reduced basis}
 
 Lagrange was the first to formalize\cite{lagrangeArithmetique} the notion of reduction for rank-two lattices.
@@ -251,12 +231,166 @@ Lagrange was the first to formalize\cite{lagrangeArithmetique} the notion of red
 Let $L$ be a two-rank lattice of $\mathbb{R}^n$. A basis $(\vec{b_1}, \vec{b_2})$ of $L$ is said to be Lagrange-reduced if and only if $\|\vec{b_1}\| \leq \|\vec{b_2}\|$ and $| \langle \vec{b_1} \vec{b_2} \rangle | \leq \| \vec{b_1} \|^2 / 2 $. 
 
 \subsection{Lagrange algorithm}
+\label{sec:lagrangeAlgorithm}
 
-Reducing 
+Lagrange's algorithm solves the lattice reduction problem exactly for lattice basis of dimension 2. It is a variant of Euler's centered algorithm that is used to compute the greatest common divider of two numbers. GCD can be thought to be a one dimension reduction problem. The GCD is the first minimum of the lattice $n \mathbb{Z} + m \mathbb{Z}$ spanned by $n$ and $m$.
 
-Complexity quadratic
+\begin{algorithm}[H]
+\caption{Lagrange algorithm}
+\label{lagrangeAlgorithm}
+\begin{algorithmic}[1]
+\REQUIRE a basis ($\vec{b_1, b_2}$) of a lattice $L$ of dimension 2.
+\ENSURE a Lagrange reduced reduced basis $(\vec{b_1, b_2})$
 
-\subsection{Our implementation}
+\IF{$\|\vec{b_1} \| < \| \vec{b_2} \| $} \STATE{swap $\vec{b_1}$ and $\vec{b_2}$} \ENDIF
+\REPEAT \STATE{
+$q = \lfloor \frac{ \langle \vec{b_1} \vec{b_2} \rangle }{\| v\|^2} \rceil $\\
+$r \leftarrow \vec{b_1} - q \vec{b_2}$\\
+$\vec{b_1} \leftarrow \vec{b_2}$\\
+$\vec{b_2} \leftarrow r$
+} \UNTIL{$\| u\| \leq \| v \| $}
+
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{The Generic Jacobi Method}
+We call \emph{generic Jacobi method} the algorithm that simply applies the Lagrange algorithm to every pair of the basis vectors for an $n$ dimensional lattice. This method was introduced\cite{originalJacobiMethodLatticeBasisReduction} by Qiao in 2012 claiming experimental results to be considerably faster than LLL. We haven't been able to reproduce the claimed running times of this algorithm.
+
+From the definition of a Lagrange-reduced basis, we can define a Jacobi-reduced basis such as:
+\begin{align}
+\langle \vec{b_i} \vec{b_j} \rangle &\leq \frac{1}{2} \| \vec{b_i}\|^2 \text{ (for all $1 \leq i < j \leq n$)}.\\
+\| \vec{b_i}\| &\leq \|\vec{b_j} \| \text{ (for all $1 \leq i < j \leq n$)}
+\end{align}
+
+
+\begin{algorithm}[H]
+\caption{Generic Jacobi Method}
+\label{genericJacobiMethod}
+\begin{algorithmic}
+\REQUIRE a basis matrix ($\vec{b_1,...,b_n}$)
+\ENSURE a generic-Jacobi reduced basis ($\vec{b_1,...,b_n}$)
+
+\WHILE{not all pairs ($\vec{b_i,b_j}$) satisfy both generic-Jacobi reduction conditions}
+    \FOR{$i = 1$ \TO $n-1$ }
+        \FOR{$j = i + 1$ \TO $n$ }
+            \STATE {$[\vec{b_i, b_j}]$} = \emph{Lagrange$(\vec{b_i, b_j})$}
+        \ENDFOR
+    \ENDFOR
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{A Jacobi Variant}
+
+In this part, we present the Jacobi-variant that was used for running our benchmarking.
+
+\subsubsection{$\omega$-Lagrange-reduced conditions}
+An $\omega$ is introduced to 
+There are two conditions for a basis to be $\omega$-Lagrange-reduced.
+\[
+\begin{cases}
+\lfloor \vec{G}_{ij} / \vec{G}_{ss} \rceil \leq 1, \\
+\omega^2 \vec{G}_{ll} \leq \vec{G}_{ii} + \vec{G}_{jj} - 2|\vec{G}_{ij}|
+
+\end{cases}
+\]  where $1/\sqrt{3} \leq \omega < 1$.
+
+\subsubsection{Size-reduction Lagrange}
+The size-reduction algorithm is a variant of the Lagrange algorithm that we presented in section \ref{sec:lagrangeAlgorithm}. The reduction is only performed if the $\omega$-Lagrange-reduced conditions are not satisfied. In which case, both the unimodular reduction matrix $\vec{Z}$ and the Gram matrix $\vec{G}$ are updated by applying the Lagrange reduction to the longest of the basis vectors at index $i$ or $j$.
+
+\begin{algorithm}[H]
+\caption{LagrangeIT}
+\label{customLagrangeIT}
+\begin{algorithmic}
+\REQUIRE The matrices $\vec{G, Z}$, a pair of indices $(i,j):i<j$ and a parameter $\omega$
+\ENSURE  Updated $\vec{G, Z}$ where one Lagrange iteration was performed on the $i$th and $j$th basis vectors. 
+
+\STATE {$s \leftarrow i$}
+\STATE {$l \leftarrow j$}
+
+\IF{$\vec{G}_{ii} > \vec{G}_{jj}$}
+    \STATE {$s \leftarrow j; l \leftarrow i$}
+\ENDIF
+
+\STATE{$q \leftarrow \lfloor \frac {\vec{G}_{ii}}{\vec{G}_{ss}} \rceil $}
+
+\IF {Verify both $\omega$-Lagrange-reduced conditions}
+
+\STATE{$\vec{Z_l} -= q* Z_s $}
+\STATE{$\vec{G_l} -= q* G_s $}
+
+\FOR{every column $k$ of $\vec{G}$}
+\STATE{$\vec{G}_{lk} = \vec{G}_{kl} $}
+\ENDFOR
+
+\STATE{$\vec{G}_{ll} -= q* \vec{G}_{ls} $}
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Jacobi-variant algorithm}
+This Jacobi-variant performs Lagrange reductions iteratively on the Gram matrix until no more reduction is done. That is when both $\omega$-reduced Lagrange conditions are satisfied. 
+
+\begin{algorithm}[H]
+\caption{Jacobi-Variant Reduction}
+\label{jacobiVariantReduction}
+\begin{algorithmic}
+\REQUIRE a basis matrix ($\vec{B = b_1,...,b_n}$) and $\omega$
+\ENSURE a reduced basis ($\vec{b_1,...,b_n}$) where each pair of vectors is $\omega$-Lagrange reduced
+\STATE{$\vec{G} = \langle \vec{B} \rangle$, $\vec{Z} = I_n$}
+\WHILE{LagrangeIT method reduced the basis vectors}
+    \FOR{$i = 1$ \TO $n-1$ }
+        \FOR{$j = i + 1$ \TO $n$ }
+            \STATE {$[\vec{G,Z}]$} = \emph{LagrangeIT$(\vec{G,Z},i,j,\omega)$}
+        \ENDFOR
+    \ENDFOR
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Our Implementation}
+
+We implemented this Jacobi algorithm in C++ with the \emph{newNTL} library. The FPLLL implementation was used for LLL reductions.
+
+\subsection{Experimental Results}
+
+We notice that the Jacobi algorithm does reduce the bases further than LLL. This comes that the LLL reduction definition is more.
+The Jacobi method requires the vectors to be 
+
+We show two examples of bases that are LLL-reduced but not $\omega > 0.9$ Jacobi reduced.
+\begin{enumerate}
+
+\item \[
+\vec{B} = \begin{bmatrix}
+  \vec{b_1} \\
+  \vec{b_2} \\
+  \vec{b_3}
+ \end{bmatrix} = \begin{bmatrix}
+  0 & 2 & 0 \\
+  0 & 1 & 2 \\
+  2 & 0 & 0
+ \end{bmatrix}
+\]
+
+
+\item \[
+\vec{B} = \begin{bmatrix}
+  \vec{b_1} \\
+  \vec{b_2} \\
+  \vec{b_3}
+ \end{bmatrix} = \begin{bmatrix}
+  4/3 & 0 & 0 \\
+  2/3 & \sqrt{4/3} & 0 \\
+  2/3 & \sqrt{4/3}/2 & 1
+ \end{bmatrix}
+\]
+The Jacobi Method will find a shortest vector by subtracting $\vec{b_1}-\vec{b_2}$, while LLL won't be able to reduce further.
+\end{enumerate}
+
 
 \section{Conclusions}
 
@@ -264,6 +398,5 @@ Complexity quadratic
 \bibliography{references}
 
 \section{Credits}
-
 
 \end{document}
