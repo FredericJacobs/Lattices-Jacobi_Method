@@ -56,12 +56,12 @@ which results from the Pythagorean theorem.
 Informally, a lattice can be defined as the infinite set of intersection points of an infinite regular grid.
 
 This can be translated into a more formal definition~\cite{SchnorrStanfordNotes}.\newline 
-Let $\vec{b_1}, \vec{b_2}, ... \vec{b_n} \in \mathbb{R}^m$ be linearly independent vectors for $n\leq m$. We call the additive subgroup
+Let $\vec{b_1}, \vec{b_2}, ... \vec{b_n} \in \mathbb{R}^m$ be linearly independent vectors for $n\leq m$. We call the \my{discrete} additive subgroup
 
 \[
 L(\vec{b_1}, \vec{b_2},..., \vec{b_n}):= \displaystyle\sum_{i=1}^{n} \vec{b_i} \mathbb{Z}
-\] of $\mathbb{R}^m$, a lattice with basis $b_1,b_2,...,b_n$.
-A lattice that has $\vec{b_1},\vec{b_2},...,\vec{b_n}$ as basis vectors will be noted in matrix form as $B$ where each vector $\vec{b_i}$ is a column of the matrix.
+\] of $\mathbb{R}^m$, a lattice with basis \my{ bold..}$b_1,b_2,...,b_n$.
+A lattice that has $\vec{b_1},\vec{b_2},...,\vec{b_n}$ as basis vectors \my{is fully described by this basis which we denote} in matrix form as $B$ where each vector $\vec{b_i}$ is a column of the matrix.
 The \emph{dimension of the lattice} is $dim(L) := rank(L) := n$.
 
 A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$. We will work exclusively with full dimensional lattices. In other words, this means that we will work on matrices with $m=n$ linearly independent vectors.
@@ -70,7 +70,7 @@ A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$
 
 As this article focuses on lattice basis reduction, it is important to define the equivalence of two bases. Two bases $B_1 , B_2$ are equivalent iff $B_2 = B_1 U$ for a unimodular matrix $U$.
 
-A \emph{unimodular matrix} $U$ is a square integer matrix such that $det(U) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $U$ yields $B'$ by performing a combination of the following column operations:
+A \emph{unimodular matrix} $U$ is a square integer matrix such that $det(U) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $U$ yields $\my{B'}$ by performing a combination of the following column operations:
 \begin{itemize}
 \item Swap two columns
 \item Negate the elements of a column
@@ -93,34 +93,34 @@ Since we will be studying full dimensional lattices, the number of basis vectors
 For full dimensional lattices, the volume can be computed:
 \[
 \text{vol} \,L_{\text{full}} = |\det B|
-\] where $B$ is a matrix of the linearly independent lattice's basis vectors.
+\] where $B$ is a matrix of the linearly independent lattice basis vectors.
 
 
 \subsubsection{Minkowski's Convex Body Theorem}
 
-Minkowski's Convex Body Theorem tells us that for a full-rank lattice $L$ of $\mathbb{R}^n$. Let $C$ be a measurable subset of $\mathbb{R}^n$, convex, symmetric with respect to 0, and of measure $> 2^n \text{vol}(L)$. Then $C$ contains at least a nonzero point of the lattice $L$.
+\my{grammar} Minkowski's Convex Body Theorem tells us that for a full-rank lattice $L$ of $\mathbb{R}^n$. Let $C$ be a measurable subset of $\mathbb{R}^n$, convex, symmetric with respect to 0, and of measure $> 2^n \text{vol}(L)$. Then $C$ contains at least a nonzero point of the lattice $L$.
 
-A corollary of Minkowski's theorem tells us that there exists for any $n$-dimensional full-rank lattice $L$ a nonzero vector $x$ such that
+A corollary of Minkowski's theorem tells us that there exists for any $n$-dimensional full-rank lattice $L$ a nonzero \my{lattice-}vector $x$ \my{whose length is bounded by $\sqrt{n} (\det L)^{1/n}$. So we can derive a bound on the length of a shortest lattice-vector:}
 
 \[
-\lambda_1(L) \leq \sqrt{n} (\det L)^{1/n}
+\lambda_1(L) \leq \sqrt{n} (\det L)^{1/n}.
 \]
 
-This gives us an upper-bound on the size of a shortest vector in a lattice.
+
 
 \subsubsection{Hermite Normal Form}
 
-The \emph{Hermite Normal Form} representation of a basis matrix $B$, abbreviated \emph{HNF (B)}, is unique. It is the analogue of the reduced echelon form for integer matrices.
+The \emph{Hermite Normal Form}~\cite{SchnorrStanfordNotes} representation of a basis matrix $B$, abbreviated \emph{HNF (B)}, is unique. It is the analogue of the reduced echelon form for integer matrices.
 
-A full-rank matrix $[a_{ij}] \in M_{n,n} (\mathbb{R})$ is in HNF when\cite{SchnorrStanfordNotes} :
+A full-rank matrix $[a_{ij}] \in M_{n,n} (\mathbb{R})$ is in HNF when:
 \begin{enumerate}
 \item $a_{ij} = 0$ for $j > i$, i.e. $A$ is lower triangular. 
 \item $a_{ii} > 0$ for $i=1,2,...,n$
 \item $0 \leq a_{ij} < a_{ii}$ for $j < i$
 \end{enumerate}
 
-\subsection{Special Lattices}
-
+\subsection{Special Lattices \my{Two types of lattices}}
+\my{For our experiments, we will take into account two types of lattices: Random lattices as used in cryptology and special lattices that allow an almost orthogonal basis.}
 \subsubsection{Random Lattice}
 
 We say that a lattice is a random lattice $L$ of prime volume $P$ if under HNF form its basis matrix $B$ has the following properties:
@@ -131,17 +131,17 @@ We say that a lattice is a random lattice $L$ of prime volume $P$ if under HNF f
 \end{itemize}
 
 Without loss of generality, we hence restrict tests to random lattices of volume $P$ whose basis in HNF form is as follows:
-$$\begin{array}{ccccc}
+\my{$$\begin{array}{ccccc}
 P & \vec{a_2} &  & \\
 \vec{a_2} & 1&   & \\ 
 \dots & &  & \\ 
 \vec{a_{m}} & & &1 
-\end{array}$$
+\end{array}$$}
 where $a_i \in \mathbb{Z}/ P\mathbb{Z}$.
 
 \subsubsection{Almost Orthogonal Lattice Bases}
 
-We define a \emph{almost orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as a $n \times n$ square matrix whose entries are $k$-bits picked at random. These lattices are frequently used for signal processing applications~\cite{originalJacobiMethodLatticeBasisReduction}.
+We define a\my{n} \emph{almost orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as a\my{n} $n \times n$ square matrix whose entries are $k$-bit \my{integers} picked at random. These lattices are frequently used for signal processing applications~\cite{originalJacobiMethodLatticeBasisReduction}.
 
 \subsection{Lattice Reduction}
 
@@ -158,7 +158,7 @@ The \emph{orthogonality defect} of a basis $\vec{b_1},\vec{b_2},...,\vec{b_n}$ o
     \text{OrthDefect}(L) :=  \sqrt[n]{\frac{\displaystyle\prod^{n}_{i=1} \|\vec{b_i}\| }{\det(L)}}
 \]
 
-The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}. The orthogonality defect can be interpreted geometrically as the product of the basis vector lengths divided by the volume of the lattice. As the basis vectors are getting increasingly orthogonal during a reduction, the nominator will become smaller. The lower bound of the orthogonality defect is $\text{OrthDefect} \ge 1$. If $\text{OrthDefect} = 1$, the basis is completely orthogonal.
+The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}. The orthogonality defect can be interpreted geometrically \my{you recite the definition, no geometrical interpretation is given??} as the product of the basis vector lengths divided by the volume of the lattice. As the basis vectors are getting increasingly orthogonal during a reduction, the nominator will become smaller. The lower bound of the orthogonality defect is $\text{OrthDefect} \ge 1$. \my{In the special case that ..}If $\text{OrthDefect} = 1$, the basis is completely orthogonal.
 
 \subsubsection{Hermite factor of a basis}
 \label{sec:hermiteFactor}
@@ -190,7 +190,7 @@ The GSO process  can be defined recursively:
 \vec{b_i}^{\star} = \displaystyle\sum^{i-1}_{j=1} \mu_{i,j} \vec{b_j^\star}
 \end{cases}
 \]
-where $\mu_{ij} = ..$. Is the set of vectors $b_i^*$ a basis or not? In which case yes?
+where \my{$\mu_{ij} = ..$. Is the set of vectors $b_i^*$ a basis or not? In which case yes?}
 
 \section{The LLL Algorithm}
 
@@ -199,7 +199,7 @@ The LLL algorithm~\cite{lllpaper} was the first polynomial-time reduction algori
 \subsection{$\delta$-LLL Reduced}
 We say that a basis is $\delta$-LLL reduced if:
 \begin{itemize}
-\item $| \mu_{i,j}| \leq \frac{1}{2} \text{, } \forall i > j$
+\item $| \mu_{i,j}| \leq \frac{1}{2} $ \my{better: for $1 \leq j < i \leq	n$}$\text{, } \forall i > j$
 \item Lovász's condition: $\forall (\vec{b_i, b_{i+1}})$, we have $(\delta - \mu^2_{i+1,i}) \|\vec{b}^{\star}_{i}\|^2 \leq \| \vec{b}^{\star}_{i+1} \|^2$
 \end{itemize}
 
@@ -210,13 +210,13 @@ Since the LLL-reduction algorithm returns a $\delta$-LLL reduced basis, we can o
 \begin{itemize}
 \item $\| \vec{b_1} \| \leq \alpha^{(n-1)/2} \lambda_1 $
 \item $\max_i \| \vec{b_i} \| \leq \alpha^{(n-1)/2} \lambda_n $
-\item $\| b_1 \| \leq \alpha^{(n-1)/4} \det B^{1/n}$
+\item $\| \vec{b}_1 \| \leq \alpha^{(n-1)/4} \det B^{1/n}$
 \end{itemize} 
-where the parameter $\alpha = 1/(\delta - \frac{1}{4})$. Since $\delta$ is bounded by $1/4 < \delta < 1$, parameter $\alpha \geq 4/3$.
+where the parameter $\alpha = 1/(\delta - \frac{1}{4})$. Since $\delta$ is bounded by $1/4 < \delta < 1$, parameter $\alpha \geq 4/3$. \my{actually $>$ }
 
 \subsection{LLL overview}
 
-The LLL algorithm, like many reduction algorithms, can be broken down into two parts: size-reduction and vector swapping. Size-reduction reduces the vectors from the input basis. After that, the vectors of the basis are checked against the Lovász condition. If a pair of vectors of the basis $(\vec{b_{i}}, \vec{b_{i+1}})$ don't satisfy the condition, we swap them and go back to the size reduction. my{Procedure 1..}
+The LLL algorithm, like many reduction algorithms, can be broken down into two parts: size-reduction and vector swapping. Size-reduction reduces the vectors from the input basis. After that, the vectors of the basis are checked against the Lovász condition. If a pair of vectors of the basis $(\vec{b_{i}}, \vec{b_{i+1}})$ \my{don't} satisfy the condition, we swap them and go back to the size reduction. \my{link to Procedure 1..}
 
 \begin{algorithm}[H]
 \caption{Overview of naive-iterative LLL}
@@ -237,14 +237,14 @@ In 2012, Sanzheng Qiao suggested to use a Jacobi method for lattice basis reduct
 
 \subsection{Lagrange-reduced basis}
 
-Lagrange was the first to formalize\cite{lagrangeArithmetique} the notion of reduction for rank-two lattices.
+Lagrange was the first to formalize the notion of reduction for rank-two lattices~\cite{lagrangeArithmetique}.
 
 Let $L$ be a rank-two lattice of $\mathbb{R}^n$. A basis $(\vec{b_1}, \vec{b_2})$ of $L$ is said to be Lagrange-reduced if and only if $\|\vec{b_1}\| \leq \|\vec{b_2}\|$ and $| \langle \vec{b_1} \vec{b_2} \rangle | \leq \| \vec{b_1} \|^2 / 2 $. 
 
 \subsection{Lagrange algorithm}
 \label{sec:lagrangeAlgorithm}
 
-Lagrange's algorithm solves the lattice reduction problem exactly for lattice bases of dimension 2. It is a variant of Euler's centered algorithm that is used to compute the greatest common divider of two numbers. GCD can be thought to be a one dimension reduction problem. The GCD is the first minimum of the lattice $n \mathbb{Z} + m \mathbb{Z}$ spanned by $n$ and $m$.
+Lagrange's algorithm solves the lattice reduction problem \my{there is no such thing as a lattice reduction problem; you mean it solves the SVP exactly} exactly for lattice bases of dimension 2. It is a variant of Euler's centered algorithm that is used to compute the greatest common divider of two numbers. GCD can be thought to be a one dimension reduction problem. The GCD is the first minimum of the lattice $n \mathbb{Z} + m \mathbb{Z}$ spanned by $n$ and $m$.
 
 \begin{algorithm}[H]
 \caption{Lagrange algorithm}
@@ -264,9 +264,9 @@ $\vec{b_2} \leftarrow r$
 \end{algorithmic}
 \end{algorithm}
 \subsection{The Generic Jacobi Method}
-We call \emph{generic Jacobi method} the algorithm that simply applies the Lagrange algorithm to every pair of the basis vectors for an $n$ dimensional lattice. This method was introduced~my{\cite{originalJacobiMethodLatticeBasisReduction}} by Qiao in 2012 claiming experimental results to be considerably faster than LLL.
+We call \emph{generic Jacobi method} the algorithm that simply applies the Lagrange algorithm to every pair of the basis vectors for an $n$ dimensional lattice. This method was introduced~\cite{originalJacobiMethodLatticeBasisReduction} by Qiao in 2012 claiming experimental results to be considerably faster than LLL.
 
-From the definition of a Lagrange-reduced basis, we can define a Jacobi-reduced basis such as:
+From the definition of a Lagrange-reduced basis, we can define a Jacobi-reduced basis \my{replace 'such as' by 'for which'}:
 \begin{align}
 \langle \vec{b_i} \vec{b_j} \rangle &\leq \frac{1}{2} \| \vec{b_i}\|^2 \text{ (for all $1 \leq i < j \leq n$)}.\\
 \| \vec{b_i}\| &\leq \|\vec{b_j} \| \text{ (for all $1 \leq i < j \leq n$)}
@@ -296,7 +296,7 @@ From the definition of a Lagrange-reduced basis, we can define a Jacobi-reduced 
 In this part, we present the Jacobi-variant that was used for running our benchmarking.
 
 \subsubsection{$\omega$-Lagrange-reduced conditions}
-An $\omega$ is introduced to 
+An \my{A parameter} $\omega$ is introduced to \my{...? }
 There are two conditions for a basis to be $\omega$-Lagrange-reduced.
 
 \[
@@ -305,7 +305,7 @@ There are two conditions for a basis to be $\omega$-Lagrange-reduced.
 \omega^2 g_{ll} \leq g_{ii} + g_{jj} - 2|g_{ij}|
 
 \end{cases}
-\]  where $1/\sqrt{3} \leq \omega < 1$.
+\]  where $1/\sqrt{3} \leq \omega < 1$ \my{and where $g_{ij}$}.. .
 
 \subsubsection{Size-reduction Lagrange}
 The size-reduction algorithm is a variant of the Lagrange algorithm that we presented in section \ref{sec:lagrangeAlgorithm}. The reduction is only performed if the $\omega$-Lagrange-reduced conditions are not satisfied. In which case, both the unimodular reduction matrix $Z$ and the Gram matrix $G$ are updated by applying the Lagrange reduction to the longest of the basis vectors at index $i$ or $j$.
@@ -324,14 +324,14 @@ The size-reduction algorithm is a variant of the Lagrange algorithm that we pres
     \STATE {$s \leftarrow j; l \leftarrow i$}
 \ENDIF
 
-\STATE{$q \leftarrow \lfloor \frac {g_{ll}}{g_{ss}} \rceil $}
+\STATE{$q \leftarrow \lfloor \frac {g_{ll}}{g_{ss}} \rceil $ \my{?? sure? }}
 
 \IF {Verify both $\omega$-Lagrange-reduced conditions}
 
 \STATE{$\vec{z}_l -= q* \vec{z}_s$}
 \STATE{$\vec{g}_l -= q* \vec{g}_s$}
 
-\FOR{every column $k$ of $G$}
+\FOR{every column $k$ of $G$ \my{onlu for the ones smaller than $\ell$? columns or rows?}}
 \STATE{$g_{lk} = g_{kl} $}
 \ENDFOR
 
@@ -340,7 +340,6 @@ The size-reduction algorithm is a variant of the Lagrange algorithm that we pres
 
 \end{algorithmic}
 \end{algorithm}
-\my{Please make sure that there is no mistake above. I will check it later. Syntax}
 
 \subsection{Jacobi-variant algorithm}
 This Jacobi-variant performs Lagrange reductions iteratively on the Gram matrix until no more reduction is done. That is when both $\omega$-reduced Lagrange conditions are satisfied. 
@@ -367,11 +366,11 @@ This Jacobi-variant performs Lagrange reductions iteratively on the Gram matrix 
 
 \subsection{Our Implementation}
 
-We implemented this Jacobi algorithm in C++ with the \emph{newNTL} library. The FPLLL implementation was used for LLL reductions.
+We implemented the \my{variant on the} Jacobi reduction in C++ \my{by use of} with the \emph{newNTL} library. The FPLLL implementation \my{of LLL} was used \my{to compare the results after reduction.}
 
 \subsection{Scope of testing}
 
-Our experimentation focused on the quality of the reduction. The two quality metics we used for comparing the reductions are:
+Our experimentation focused on the quality of the reduction. The two quality \my{metics} we used for comparing the reductions are:
 
 \begin{itemize}
 \item the orthogonality defect (See section: \ref{sec:orthogonalityDefect}), gives us an indication about the size of the reduced basis vectors for a given lattice.
@@ -379,27 +378,33 @@ Our experimentation focused on the quality of the reduction. The two quality met
 \end{itemize}
 
 \subsection{Input bases}
-Numerous papers were written about the Jacobi method for lattice reduction by S. Qiao \cite{originalJacobiMethodLatticeBasisReduction}\cite{complexityAnalysisOfJacobiMethod}\cite{enhancedJacobi} but none of the papers are clarifying what bitsize was used for the randomly generated entries of the vectors. The main focus of the authors was the use of lattice reduction for signal processing, more specifically multiinput and multioutput (MIMO), the use of multiple antennas at both the transmitter and receiver to improve communication reliance. MIMO uses smaller dimensions lattices. \cite{enhancedJacobi} and \cite{tian2014hybrid}  are using lattices that are at most 20 and  100 dimensions respectively. These dimensions are inappropriate for cryptographic applications.
+Numerous papers were written about the Jacobi method for lattice reduction by S. Qiao \cite{originalJacobiMethodLatticeBasisReduction}\cite{complexityAnalysisOfJacobiMethod}\cite{enhancedJacobi} but none of the papers are clarifying what bitsize was used for the randomly generated entries of the vectors. The main focus of the authors was the use of lattice reduction for signal processing, more specifically multiinput and multioutput (MIMO), the use of multiple antennas at both the transmitter and receiver to improve communication reliance. MIMO uses smaller dimensions lattices. \my{In} \cite{enhancedJacobi} and \cite{tian2014hybrid} \my{a reduction is performed on} lattices of dimensions 20 to 100. These dimensions are inappropriate for cryptographic applications.
 
-In our experiments, we have used a bitsize of around 10 bits entries when generating the almost orthogonal bases.
+In our experiments, we have used a bitsize of around 10 bits entries when \my{actually always} generating the almost orthogonal bases.
 
 \subsection{On Almost Orthogonal Basis}
 
 We initially ran our Jacobi reduction variant on almost orthogonal bases to attempt to reproduce Qiao's results.
+The orthogonality defects are similar to \my{what} the authors found in \cite{tian2014hybrid}. \my{Our results are shown in Fig.~\ref{fig1} and Fig.~\ref{fig2}. We vary $\omega$..... We observe that...}
 
-\begin{figure}[h!]
-  \caption{LLL with delta $\delta = 0.99$ and Jacobi with $\omega = 0.6$}
+\begin{figure}[H]
+\begin{minipage}{.5\textwidth}
+
   \centering
-    \includegraphics[width=0.5\textwidth]{random-matrix-omega-06defect.png}
-\end{figure}
+    \includegraphics[width=0.9\textwidth]{random-matrix-omega-06defect.png}
+      \caption{LLL with delta $\delta = 0.99$ and Jacobi with $\omega = 0.6$}
+  \label{fig1}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
 
-\begin{figure}[h!]
+  \centering
+    \includegraphics[width=0.9\textwidth]{random-matrix-omega-09defect.png}
+    
   \caption{LLL with delta $\delta = 0.99$ and Jacobi with $\omega = 0.99$}
-  \centering
-    \includegraphics[width=0.5\textwidth]{random-matrix-omega-09defect.png}
-\end{figure}
+  \label{fig2}
+\end{minipage}
 
-These orthogonality defects are similar to that the authors found in \cite{tian2014hybrid}.
+\end{figure}
 
 \subsection{Random Lattices}
 
@@ -438,7 +443,7 @@ B = \begin{bmatrix}
  \end{bmatrix}
 \]
 
-In the first case, LLL will stop while Jacobi does exchange $B-2$ and $b_3$. In the second case the Jacobi Method will find a shortest vector by subtracting $\vec{b_1}-\vec{b_2}$, while LLL won't be able to reduce further.
+In the first case, LLL will stop while Jacobi does exchange $\vec{b}_2$ and $\vec{b}_3$. In the second case the Jacobi Method will find a shortest vector by subtracting $\vec{b_1}-\vec{b_2}$, while LLL won't be able to reduce further.
 \end{enumerate}
 
 \subsection{Note on running times}
@@ -447,10 +452,12 @@ Although the analysis of the running time was not a metric that was researched i
 
 
 \section{Conclusions}
+\my{Short paragraph}
+\section{Credits \my{ or Acknowledgment}}
 
 \bibliographystyle{alpha}
 \bibliography{references}
 
-\section{Credits}
+
 
 \end{document}
