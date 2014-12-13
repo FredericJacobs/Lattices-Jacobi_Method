@@ -56,12 +56,12 @@ which results from the Pythagorean theorem.
 Informally, a lattice can be defined as the infinite set of intersection points of an infinite regular grid.
 
 This can be translated into a more formal definition~\cite{SchnorrStanfordNotes}.\newline 
-Let $\vec{b_1}, \vec{b_2}, ... \vec{b_n} \in \mathbb{R}^m$ be linearly independent vectors for $n\leq m$. We call the \my{discrete} additive subgroup
+Let $\vec{b_1}, \vec{b_2}, ... \vec{b_n} \in \mathbb{R}^m$ be linearly independent vectors for $n\leq m$. We call the discrete additive subgroup
 
 \[
 L(\vec{b_1}, \vec{b_2},..., \vec{b_n}):= \displaystyle\sum_{i=1}^{n} \vec{b_i} \mathbb{Z}
-\] of $\mathbb{R}^m$, a lattice with basis \my{ bold..}$b_1,b_2,...,b_n$.
-A lattice that has $\vec{b_1},\vec{b_2},...,\vec{b_n}$ as basis vectors \my{is fully described by this basis which we denote} in matrix form as $B$ where each vector $\vec{b_i}$ is a column of the matrix.
+\] of $\mathbb{R}^m$, a lattice with basis $\vec{b_1,b_2,...,b_n}$.
+A lattice that has $\vec{b_1},\vec{b_2},...,\vec{b_n}$ as basis vectors is fully described by this basis which we denote in matrix form as $B$ where each vector $\vec{b_i}$ is a column of the matrix.
 The \emph{dimension of the lattice} is $dim(L) := rank(L) := n$.
 
 A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$. We will work exclusively with full dimensional lattices. In other words, this means that we will work on matrices with $m=n$ linearly independent vectors.
@@ -70,7 +70,7 @@ A lattice $L \subseteq \mathbb{R}^m$ is \emph{full dimensional} when $rank(L)=m$
 
 As this article focuses on lattice basis reduction, it is important to define the equivalence of two bases. Two bases $B_1 , B_2$ are equivalent iff $B_2 = B_1 U$ for a unimodular matrix $U$.
 
-A \emph{unimodular matrix} $U$ is a square integer matrix such that $det(U) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $U$ yields $\my{B'}$ by performing a combination of the following column operations:
+A \emph{unimodular matrix} $U$ is a square integer matrix such that $det(U) = \pm 1$. The right multiplication of a matrix $B$ with a unimodular matrix $U$ yields $B'$ by performing a combination of the following column operations:
 \begin{itemize}
 \item Swap two columns
 \item Negate the elements of a column
@@ -98,15 +98,13 @@ For full dimensional lattices, the volume can be computed:
 
 \subsubsection{Minkowski's Convex Body Theorem}
 
-\my{grammar} Minkowski's Convex Body Theorem tells us that for a full-rank lattice $L$ of $\mathbb{R}^n$. Let $C$ be a measurable subset of $\mathbb{R}^n$, convex, symmetric with respect to 0, and of measure $> 2^n \text{vol}(L)$. Then $C$ contains at least a nonzero point of the lattice $L$.
+For a full-rank lattice $L$ of $\mathbb{R}^n$ and $C$, a measurable subset of $\mathbb{R}^n$, convex, symmetric with respect to 0, and of measure $> 2^n \text{vol}(L)$. Then $C$ contains at least a nonzero point of the lattice $L$.
 
-A corollary of Minkowski's theorem tells us that there exists for any $n$-dimensional full-rank lattice $L$ a nonzero \my{lattice-}vector $x$ \my{whose length is bounded by $\sqrt{n} (\det L)^{1/n}$. So we can derive a bound on the length of a shortest lattice-vector:}
+A corollary of Minkowski's theorem tells us that there exists for any $n$-dimensional full-rank lattice $L$ a nonzero lattice-vector $x$ whose length is bounded by $\sqrt{n} (\det L)^{1/n}$. So we can derive a bound on the length of a shortest lattice-vector:
 
 \[
 \lambda_1(L) \leq \sqrt{n} (\det L)^{1/n}.
 \]
-
-
 
 \subsubsection{Hermite Normal Form}
 
@@ -119,8 +117,9 @@ A full-rank matrix $[a_{ij}] \in M_{n,n} (\mathbb{R})$ is in HNF when:
 \item $0 \leq a_{ij} < a_{ii}$ for $j < i$
 \end{enumerate}
 
-\subsection{Special Lattices \my{Two types of lattices}}
+\subsection{Two types of lattices}
 \my{For our experiments, we will take into account two types of lattices: Random lattices as used in cryptology and special lattices that allow an almost orthogonal basis.}
+
 \subsubsection{Random Lattice}
 
 We say that a lattice is a random lattice $L$ of prime volume $P$ if under HNF form its basis matrix $B$ has the following properties:
@@ -131,17 +130,17 @@ We say that a lattice is a random lattice $L$ of prime volume $P$ if under HNF f
 \end{itemize}
 
 Without loss of generality, we hence restrict tests to random lattices of volume $P$ whose basis in HNF form is as follows:
-\my{$$\begin{array}{ccccc}
+$$\begin{array}{ccccc}
 P & \vec{a_2} &  & \\
 \vec{a_2} & 1&   & \\ 
 \dots & &  & \\ 
 \vec{a_{m}} & & &1 
-\end{array}$$}
+\end{array}$$
 where $a_i \in \mathbb{Z}/ P\mathbb{Z}$.
 
 \subsubsection{Almost Orthogonal Lattice Bases}
 
-We define a\my{n} \emph{almost orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as a\my{n} $n \times n$ square matrix whose entries are $k$-bit \my{integers} picked at random. These lattices are frequently used for signal processing applications~\cite{originalJacobiMethodLatticeBasisReduction}.
+We define an \emph{almost orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as an $n \times n$ square matrix whose entries are $k$-bit integers picked at random. These lattices are frequently used for signal processing applications~\cite{originalJacobiMethodLatticeBasisReduction}.
 
 \subsection{Lattice Reduction}
 
@@ -158,7 +157,7 @@ The \emph{orthogonality defect} of a basis $\vec{b_1},\vec{b_2},...,\vec{b_n}$ o
     \text{OrthDefect}(L) :=  \sqrt[n]{\frac{\displaystyle\prod^{n}_{i=1} \|\vec{b_i}\| }{\det(L)}}
 \]
 
-The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}. The orthogonality defect can be interpreted geometrically \my{you recite the definition, no geometrical interpretation is given??} as the product of the basis vector lengths divided by the volume of the lattice. As the basis vectors are getting increasingly orthogonal during a reduction, the nominator will become smaller. The lower bound of the orthogonality defect is $\text{OrthDefect} \ge 1$. \my{In the special case that ..}If $\text{OrthDefect} = 1$, the basis is completely orthogonal.
+The orthogonality defect is a quality indicator that we will use to compare the reduction of \emph{the set of basis vectors}. The orthogonality defect can be interpreted geometrically \my{you recite the definition, no geometrical interpretation is given??} as the product of the basis vector lengths divided by the volume of the lattice. As the basis vectors are getting increasingly orthogonal during a reduction, the nominator will become smaller. The lower bound of the orthogonality defect is $\text{OrthDefect} \ge 1$. In the special case where the basis would be completely orthogonal, the orthogonality defect would be $\text{OrthDefect} = 1$.
 
 \subsubsection{Hermite factor of a basis}
 \label{sec:hermiteFactor}
@@ -192,6 +191,8 @@ The GSO process  can be defined recursively:
 \]
 where \my{$\mu_{ij} = ..$. Is the set of vectors $b_i^*$ a basis or not? In which case yes?}
 
+Gram-Schmidt 
+
 \section{The LLL Algorithm}
 
 The LLL algorithm~\cite{lllpaper} was the first polynomial-time reduction algorithm to be introduced outputting a nearly orthogonal basis. LLL and BKZ 2.0 are the two reduction algorithms that are used in practice. LLL is used in a first step and BKZ, with a suitable blocksize, is then used in a second step to reduce the basis further if needed.
@@ -199,7 +200,7 @@ The LLL algorithm~\cite{lllpaper} was the first polynomial-time reduction algori
 \subsection{$\delta$-LLL Reduced}
 We say that a basis is $\delta$-LLL reduced if:
 \begin{itemize}
-\item $| \mu_{i,j}| \leq \frac{1}{2} $ \my{better: for $1 \leq j < i \leq	n$}$\text{, } \forall i > j$
+\item $| \mu_{i,j}| \leq \frac{1}{2} $ for $1 \leq j < i \leq n$
 \item Lovász's condition: $\forall (\vec{b_i, b_{i+1}})$, we have $(\delta - \mu^2_{i+1,i}) \|\vec{b}^{\star}_{i}\|^2 \leq \| \vec{b}^{\star}_{i+1} \|^2$
 \end{itemize}
 
@@ -212,15 +213,15 @@ Since the LLL-reduction algorithm returns a $\delta$-LLL reduced basis, we can o
 \item $\max_i \| \vec{b_i} \| \leq \alpha^{(n-1)/2} \lambda_n $
 \item $\| \vec{b}_1 \| \leq \alpha^{(n-1)/4} \det B^{1/n}$
 \end{itemize} 
-where the parameter $\alpha = 1/(\delta - \frac{1}{4})$. Since $\delta$ is bounded by $1/4 < \delta < 1$, parameter $\alpha \geq 4/3$. \my{actually $>$ }
+where the parameter $\alpha = 1/(\delta - \frac{1}{4})$. Since $\delta$ is bounded by $1/4 < \delta < 1$, parameter $\alpha > 4/3$.
 
 \subsection{LLL overview}
 
-The LLL algorithm, like many reduction algorithms, can be broken down into two parts: size-reduction and vector swapping. Size-reduction reduces the vectors from the input basis. After that, the vectors of the basis are checked against the Lovász condition. If a pair of vectors of the basis $(\vec{b_{i}}, \vec{b_{i+1}})$ \my{don't} satisfy the condition, we swap them and go back to the size reduction. \my{link to Procedure 1..}
+The LLL algorithm, like many reduction algorithms, can be broken down into two parts: size-reduction and vector swapping. Size-reduction reduces the vectors from the input basis. After that, the vectors of the basis are checked against the Lovász condition. If a pair of vectors of the basis $(\vec{b_{i}}, \vec{b_{i+1}})$ don't satisfy the condition, we swap them and go back to the size reduction (cfr. \textbf{Procedure \ref{alg:lllAlgorithm}}).
 
 \begin{algorithm}[H]
 \caption{Overview of naive-iterative LLL}
-\label{lllAlgorithm}
+\label{alg:lllAlgorithm}
 \begin{algorithmic}[1]
 \REQUIRE a basis ($\vec{b_1, ..., b_n}$) of a lattice $L$.
 \ENSURE $\delta$-LLL reduced basis $(\vec{b_1, ..., b_n})$
@@ -244,7 +245,7 @@ Let $L$ be a rank-two lattice of $\mathbb{R}^n$. A basis $(\vec{b_1}, \vec{b_2})
 \subsection{Lagrange algorithm}
 \label{sec:lagrangeAlgorithm}
 
-Lagrange's algorithm solves the lattice reduction problem \my{there is no such thing as a lattice reduction problem; you mean it solves the SVP exactly} exactly for lattice bases of dimension 2. It is a variant of Euler's centered algorithm that is used to compute the greatest common divider of two numbers. GCD can be thought to be a one dimension reduction problem. The GCD is the first minimum of the lattice $n \mathbb{Z} + m \mathbb{Z}$ spanned by $n$ and $m$.
+Lagrange's algorithm solves the shortest vector problem exactly for lattice bases of dimension 2. It is a variant of Euler's centered algorithm that is used to compute the greatest common divider of two numbers. GCD can be thought to be a one dimension reduction problem. The GCD is the first minimum of the lattice $n \mathbb{Z} + m \mathbb{Z}$ spanned by $n$ and $m$.
 
 \begin{algorithm}[H]
 \caption{Lagrange algorithm}
