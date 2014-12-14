@@ -1,0 +1,19 @@
+\begin{algorithm}[H]
+\caption{Euclid's centered algorithm}
+\label{euclidsAlgorithm}
+\begin{algorithmic}[1]
+\REQUIRE $(n, m) \in \mathbb{Z}^2$
+\ENSURE  gcd($n,m$)
+
+\IF{$|n| < |m|$} \STATE{swap $n$ and $m$} \ENDIF
+
+\WHILE{$m \neq 0$} 
+    \STATE{$r \leftarrow n - qm$ where $q = \lfloor \frac{n}{m} \rceil$} 
+    \STATE{$n \leftarrow m$}
+    \STATE{$m \leftarrow r$}
+\ENDWHILE
+
+\STATE{Output $n$}
+
+\end{algorithmic}
+\end{algorithm}

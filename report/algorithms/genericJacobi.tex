@@ -1,0 +1,17 @@
+\begin{algorithm}[H]
+\caption{Generic Jacobi Method}
+\label{genericJacobiMethod}
+\begin{algorithmic}
+\REQUIRE a basis matrix ($\vec{b_1,...,b_n}$)
+\ENSURE a generic-Jacobi reduced basis ($\vec{b_1,...,b_n}$)
+
+\WHILE{not all pairs ($\vec{b_i,b_j}$) satisfy both generic-Jacobi reduction conditions}
+    \FOR{$i = 1$ \TO $n-1$ }
+        \FOR{$j = i + 1$ \TO $n$ }
+            \STATE {$[\vec{b_i, b_j}]$} = \emph{Lagrange$(\vec{b_i, b_j})$}
+        \ENDFOR
+    \ENDFOR
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}

@@ -1,0 +1,59 @@
+\begin{tikzpicture}[scale=0.5]
+    \coordinate (Origin)   at (0,0);
+    \coordinate (XAxisMin) at (-3,0);
+    \coordinate (XAxisMax) at (5,0);
+    \coordinate (YAxisMin) at (0,-2);
+    \coordinate (YAxisMax) at (0,5);
+%   \draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+%    \draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+
+    \clip (-3,-3) rectangle (4.48cm,5cm); % Clips the picture...
+    \pgftransformcm{1}{0.3}{0.7}{1}{\pgfpoint{0cm}{0cm}}
+          % This is actually the transformation matrix entries that
+          % gives the slanted unit vectors. You might check it on
+           % MATLAB etc. . I got it by guessing.
+    %\coordinate (Bone) at (0,2);
+    %\coordinate (Btwo) at (2,-2);
+ %   \draw[style=help lines,dashed] (-14,-14) grid[step=2cm] (14,14);
+          % Draws a grid in the new coordinates.
+        %  \filldraw[fill=gray, fill opacity=0.3] (0,0) rectangle (2,2);
+              % Puts the shaded rectangle
+%    \foreach \x in {-7,-6,...,5}{% Two indices running over each
+%      \foreach \y in {-7,-6,...,3}{% node on the grid we have drawn 
+%        \node[draw,circle,inner sep=1.2pt,fill] at (1*\x,1.7*\y) {};
+%            % Places a dot at those points
+%      }
+%    }
+ \node (b) at (0.6,-0.3) {$\cal O$} ;
+   \foreach \x in {-14,-12,...,14}{% Two indices running over each
+      \foreach \y in {-14,-12,...,14}{% node on the grid we have drawn 
+        \node[draw,circle,inner sep=1.2pt,fill=mygreen] at (\x,\y) {};  }}
+        
+        
+         \node[draw,circle,inner sep=1.4pt,fill=myred] at (-2,2) {}; 
+         \node[draw,circle,inner sep=1.4pt,fill=myred] at (2,0) {}; 
+    \node[draw,circle,inner sep=15.5pt] at (0,0) {};
+      \node[draw,circle,inner sep=21pt, dashed] at (0,0) {};
+      %\draw [thin, gray,-latex] (0,0) -- (3.5,-1) node [below, node distance =0.2cm] {} ;
+   \draw [thin, gray] (0,0) -- (-2,2) node [below, node distance =0.2cm] {} ;
+   \draw [thin, gray] (0,0) -- (2,0) node [below, node distance =0.2cm] {} ;
+   \node (b) at (-1.8,1.4) {$\lambda_1$} ;
+     \node (b) at (2.6,-.3) {$\lambda_2$} ;
+ %  \node (b) at (1.6,-0.5) {$b_1$} ;
+   %\node (b) at (-0.7,1.7) {$b_2$} ;  
+    % \draw [thin, gray,-latex] (2.4,0.1) -- (0.9,1.5)node [below left] {$e$} ;
+   % \path [line] (0,0) -- (0,3.9);
+%    \draw [ultra thick,-latex,red] (Origin)
+%        -- (Bone) node [above left] {$b_1$};
+%    \draw [ultra thick,-latex,red] (Origin)
+%        -- (Btwo) node [below right] {$b_2$};
+%    \draw [ultra thick,-latex,red] (Origin)
+%        -- ($(Bone)+(Btwo)$) node [below right] {$b_1+b_2$};
+%    \draw [ultra thick,-latex,red] (Origin)
+%        -- ($2*(Bone)+(Btwo)$) node [above left] {2$b_1+b_2$};
+%    \filldraw[fill=gray, fill opacity=0.3, draw=black] (Origin)
+%        rectangle ($2*(Bone)+(Btwo)$);
+%    %\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+        % -- ($2*(0,2)+(2,-2)$)
+        % -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+  \end{tikzpicture}

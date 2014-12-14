@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.5]
+
+
+    \clip (-3,-3) rectangle (5cm,5cm); % Clips the picture...
+    \pgftransformcm{1}{0.3}{0.7}{1}{\pgfpoint{0cm}{0cm}}
+
+    \foreach \x in {-14,-12,...,14}{% Two indices running over each
+      \foreach \y in {-14,-12,...,14}{% node on the grid we have drawn 
+        \node[draw,circle,inner sep=1.2pt,fill=mygreen] at (\x,\y) {};
+            % Places a dot at those points
+      }
+    }
+  \node (b) at (0.5,0) {$\cal O$} ;
+ 
+\node[draw,circle,inner sep=17pt,fill=myblue, opacity =.30] at (0,0) {};   
+   
+
+  \end{tikzpicture}

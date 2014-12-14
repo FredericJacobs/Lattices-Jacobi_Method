@@ -1,0 +1,17 @@
+\begin{algorithm}[H]
+\caption{Fast-Jacobi Reduction}
+\label{jacobiVariantReduction}
+\begin{algorithmic}
+\REQUIRE a basis matrix ($\vec{B = b_1,...,b_n}$) and $\omega$
+\ENSURE a reduced basis ($\vec{b_1,...,b_n}$) where each pair of vectors is $\omega$-Lagrange reduced
+\STATE{$G = B^T B$, $Z = I_n$}
+\WHILE{LagrangeIT method reduced the basis vectors}
+    \FOR{$i = 1$ \TO $n-1$ }
+        \FOR{$j = i + 1$ \TO $n$ }
+            \STATE {$[G, Z]$} = \emph{LagrangeIT$(G,Z,i,j,\omega)$}
+        \ENDFOR
+    \ENDFOR
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}

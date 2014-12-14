@@ -1,0 +1,10 @@
+\begin{tikzpicture}[scale=0.35]
+
+    \clip (-4,-4) rectangle (4cm,4cm); % Clips the picture...
+    \pgftransformcm{1}{0}{0.7}{1}{\pgfpoint{0cm}{0cm}}
+          
+    \draw[style=help lines,dashed] (-14,-14) grid[step=1cm] (14,14); 
+
+ 
+  \node[draw,circle,inner sep=25pt,fill=mygreen,opacity =.3] at (0,0) {};
+  \end{tikzpicture}

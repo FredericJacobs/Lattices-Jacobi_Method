@@ -1,0 +1,374 @@
+%\newcommand{\full}[1]{#1} \newcommand{\proce}[1]{}
+\newcommand{\full}[1]{} \newcommand{\proce}[1]{#1}
+\documentclass{beamer}%[handout]
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}					
+\usepackage{mathdots}
+\usepackage{tikz}
+\usetikzlibrary{shapes,decorations.pathreplacing,calc,shapes.callouts,decorations.pathmorphing}
+
+\usepackage[normalem]{ulem}
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{dsfont}
+\definecolor{dunkelgrau}{rgb}{0.8,0.8,0.8}
+\definecolor{hellgrau}{rgb}{0.95,0.95,0.95}
+\definecolor{myred}{rgb}{0.7,0.0627,0.1627}
+\definecolor{myblue}{rgb}{.222,.62,.99}
+\definecolor{lightblue}{rgb}{.222,.62,.9}
+\definecolor{mygreen}{rgb}{.222,.62,.49}
+\definecolor{lightgreen}{rgb}{.222,.6,.45}
+
+\definecolor{mg}{rgb}{0.008,0.717,0.35}
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\renewcommand{\arraystretch}{1.2}
+\usepackage{colortbl}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{algorithmic}
+%\usetheme{umbc4}
+%\usecolortheme{beaver}
+\useinnertheme[shadow=true]{rounded}
+\setbeamertemplate{navigation symbols}{}
+
+%\beamersetuncovermixins{\opaqueness<1>{55}}{\opaqueness<2->{4}}%text light
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\mr}[1]{\color{myred}{#1}}
+\newcommand{\mb}[1]{\color{myblue}{#1}}
+\newcommand{\mg}[1]{\color{mg}{#1}}
+\newcommand{\Ot}{{\cal \tilde O}}
+\newcommand{\Ocal}{{\cal O}}
+\newcommand{\LL}{\mathbb{L}}
+
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\la}{\leftarrow}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\e}{\varepsilon}
+\newcommand{\w}{\omega}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\vol}{\text{vol}}
+\newcommand{\Ls}{\mathcal{L}}
+\newcommand{\Exp}[1]{\mathbb{E}{(#1)}}
+\newcommand{\norm}[1]{ \Vert{ #1 \Vert }}
+\newcommand{\done}{\item[\Large \color{mygreen}\checkmark]}
+\newcommand{\notdone}{\item[\Large \color{myred}$\times$]}
+\newcommand{\Ball}{\text{Ball}}
+\usetikzlibrary{arrows,positioning} 
+\usetikzlibrary{calc,shadows,through}
+\tikzstyle{message} = [draw, fill=black!05, rectangle,minimum height=1.7em, minimum width=8em, drop shadow,thick]
+
+\tikzstyle{to} = [->,thick]
+\newcommand{\atmid}[3]{
+ÊÊ\coordinate (mid) at ($0.5*(#1.center) + 0.5*(#2.center)$);
+ÊÊ\node at (mid) {#3};
+}
+\def \myvskip {\vspace{.3cm}}
+\def \myskip {\hskip 1em}
+    \setbeamercolor{upyellow}{fg=black,bg=yellow!20}
+    \setbeamercolor{lowyellow}{fg=black,bg=yellow!40}
+\setbeamercolor{lowgreen}{fg=black,bg=lightgreen!10}
+\setbeamercolor{block body example}{bg=mygreen!10}%bg=background, fg= foreground
+\setbeamercolor{block title example}{bg=blue!10}%bg=background, fg= foreground
+\setbeamercolor{block body}{bg=yellow!10}%bg=background, fg= foreground
+\setbeamercolor{block title}{bg=blue!10}%bg=background, fg= foreground
+
+
+\title{Comparing the Jacobi Method and LLL lattice reduction algorithms for cryptographic applications}
+ 
+\subtitle{IN  Bachelor Semester Project}
+
+\institute[EPFL]{
+  \includegraphics[scale=.065]{pics/epfl-logo.png}
+}
+
+\author{Frederic ~Jacobs}
+  
+\date{Fall 2014}
+ 
+\begin{document}
+
+\frame{\titlepage}
+
+\AtBeginSection[]{
+     \frame{
+         \frametitle{Overview}
+         \tableofcontents[currentsection]
+     }
+}
+
+\section{Reminders about lattices}
+
+\frame{\frametitle{Lattice}
+\center
+\input{figlat/latticegrid}\hspace{2cm}
+\input{figlat/latticeZ}
+ 	\begin{itemize}
+ 	\item Discrete, additive subgroup of $\R^m$
+ 	\item Intersecting points of an infinite regular $n$-dimensional grid in $\R^m$    
+	\end{itemize}
+}
+
+\frame{\frametitle{Lattice}
+\begin{columns}[]
+ \begin{column}{0.3\textwidth}
+\input{figlat/linearcodesballs}
+ \end{column}
+ \begin{column}{0.7\textwidth}
+ 	\begin{itemize}
+ 	\item Set $B=\{\vec{b}_1,..,\vec{b}_n\} \subset\R^m$, \\$\vec{b}_i$ are linearly independent
+ 	\item Full-rank lattices: $n = m$
+ 	\begin{block}{}
+	Set of \alert{integer} linear combinations
+ 	$$\text{Lattice }\Ls = \sum_i \alert{\Z}\cdot \vec{b}_i $$
+ 	\end{block}
+	\item $B$ is called a basis of $\Ls$, it is not unique
+	\end{itemize}
+ \end{column}
+\end{columns}
+}
+
+\frame{
+\frametitle{Short vectors}
+\begin{columns}[]
+  \begin{column}{0.3\textwidth}
+\input{figlat/latminimum}
+  \end{column}
+  \begin{column}{0.7\textwidth}
+  Norm of a vector $\vec{x}$ is given by $\|\vec{x}\| := \sqrt{\sum x^2_i}$
+  \begin{block}{First lattice minimum}
+ 	\begin{itemize}
+ 	\item Length of a shortest vector of a $n$-dimensional lattice $\Ls$:
+ 	\begin{eqnarray*} 
+ 	\lambda_1(\Ls)% &= &\min\limits_{x,y\in \Ls, x\neq y} \|x-y\|\\
+ 	&:= &\min\limits_{x\in \Ls, x\neq 0} \|x\|
+ 		\end{eqnarray*} 	
+ 			\item Minimal distance between two lattice vectors
+ 				\end{itemize}
+ 				\end{block}
+ \end{column}
+\end{columns}
+}
+
+\frame{
+\frametitle{Shortest vector problem }
+\begin{columns}[]
+  \begin{column}{0.3\textwidth}
+    \input{figlat/latSVP}
+  \end{column}
+  \begin{column}{0.7\textwidth}
+ 	\begin{itemize}
+ 	\item Shortest vector problem ($SVP_2$) \\
+ 	Given $B$, find $v\in \Ls\backslash\{0\}$ of minimal length.\vspace{.3cm}
+ 	\pause 
+ 	\item Problem is hard for large dimensions and a skewed??????????? basis 
+	\end{itemize}
+ \end{column}
+\end{columns}
+}
+
+\frame{
+\frametitle{Random Lattice}
+
+We say that a lattice is a random lattice $L$ of prime volume $P$ if under HNF form its basis matrix $B$ has the following properties:
+
+\begin{itemize}
+\item the diagonal has 1 for all it's entries except one position that is set to a prime number $P$. Hence, the $\det(B)$ is prime.
+\item All row entries of the matrix right to the position that is set to $P$ are smaller than $P$ in absolute value.
+\end{itemize}
+
+Without loss of generality, we hence restrict tests to random lattices of volume $P$ whose basis in HNF form is as follows:
+$$\begin{array}{ccccc}
+P & \vec{a_2} & \dots & \vec{a_{m}}\\
+ & 1&   & \\ 
+& & \ddots & \\ 
+& & &1 
+\end{array}$$
+where $a_i \in \mathbb{Z}/ P\mathbb{Z}$.
+}
+
+\frame{
+\frametitle{Almost Orthogonal Lattice Bases}
+
+We define an \emph{almost orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as an $n \times n$ square matrix whose entries are $k$-bit integers picked at random.
+
+}
+
+\frame{
+\frametitle{The LLL Algorithm}
+\begin{itemize}
+\item First polynomial-time reduction algorithm to be introduced outputting a nearly orthogonal basis
+\item LLL and BKZ 2.0 are the two reduction algorithms that are used in practice for applications in cryptology and digital signal processing (MIMO)
+\end{itemize}
+}
+
+\frame{
+\frametitle{$\delta$-LLL Reduced}
+
+\begin{block}{$\delta$-LLL Reduced}
+Ordered basis $b_1, \ldots, b_n \in \R^m$ of $\Ls$, parameter $\delta\in (1/4, 1]$, s.t. $\forall i,j:$
+\begin{itemize}
+\item $| \mu_{i,j}| \leq \frac{1}{2} $ for $1 \leq j < i \leq n$\\
+\pause
+\item $\forall (\vec{b_i, b_{i+1}})$, we have $(\delta - \mu^2_{i+1,i}) \|\vec{b}^{\star}_{i}\|^2 \leq \| \vec{b}^{\star}_{i+1} \|^2$
+\end{itemize}
+\end{block}
+\begin{columns}[]
+\begin{column}{0.5\textwidth}
+\includegraphics[scale=.2]{pics/GSO.png}
+\end{column}
+\end{columns}
+}
+    
+\section{Jacobi Method for lattice reduction}
+
+\frame{
+\frametitle{Jacobi method for lattice reduction}
+\begin{itemize}
+\item May 2012: Sanzheng Qiao publishes generic Jacobi paper\cite{originalJacobiMethodLatticeBasisReduction}
+\item June 2012: Complexity analysis \cite{complexityAnalysisOfJacobiMethod}
+\item July 2013: An Enhanced Jacobi Method for Lattice-Reduction-Aided MIMO Detection\cite{enhancedJacobi}
+\item January 2014: A Hybrid Method for Lattice Basis Reduction\cite{tian2014hybrid}
+\item Summer 2014: A Fast Jacobi-Type Method for Lattice Basis Reduction\cite{fastJacobi}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Euclid's centered algorithm}
+\input{algorithms/euclidalgorithm}
+}
+
+
+\frame{
+\frametitle{Lagrange algorithm}
+\input{algorithms/lagrange}
+}
+
+\frame{
+    \frametitle{The generic Jacobi Method}
+    \input{algorithms/genericJacobi}
+}
+
+\frame{
+\frametitle{$\omega$-Lagrange reduced}
+\input{definitions/lagrange-omega-reduced}
+}
+
+\frame{
+\frametitle{Iterative Lagrange}
+\scalebox{0.80}{\begin{minipage}{\textwidth}
+    \input{algorithms/iterativeLangrange}
+\end{minipage}}
+}
+
+\frame{
+    \frametitle{The Fast Jacobi method}
+    \input{algorithms/fast-Jacobi}
+}
+
+\section{Experimental results}
+
+\frame{
+\frametitle{Our Implementation}
+
+\begin{itemize}
+\item Generic and Fast-Jacobi implemented
+\item Written in C++ with newNTL
+\item ZZ and double implementations
+\item Benchmarked against FPLLL ($\delta = 0.99$)
+\end{itemize}
+
+}
+
+\frame{
+\frametitle{Reduction quality indicators}
+\begin{block}{Orthogonality Defect}
+The \emph{orthogonality defect} of a basis $\vec{b_1},\vec{b_2},...,\vec{b_n}$ of a lattice $L$ is defined by:
+\[
+    \text{OrthDefect}(L) :=  \sqrt[n]{\frac{\displaystyle\prod^{n}_{i=1} \|\vec{b_i}\| }{\det(L)}}
+\]
+\end{block}
+
+\begin{block}{Hermite Factor}
+The \emph{Hermite factor} of basis vectors $\vec{b_1}, \vec{b_2},...,\vec{b_n}$ of a lattice $L$ is defined by
+
+\[
+    \text{HF}(L) := \frac{\|\vec{b_1}\|}{\sqrt[n]{\det(L)}}
+\]
+\end{block}
+}
+
+\frame{
+\frametitle{Almost orthogonal basis, $\omega=0.6$}
+\begin{center}
+\includegraphics[width=\textwidth]{results-graphs/random-matrix-omega-06defect.png}
+\end{center}
+}
+
+\frame{
+\frametitle{Almost orthogonal basis, $\omega=0.99$}
+\begin{center}
+\includegraphics[width=\textwidth]{results-graphs/random-matrix-omega-09defect.png}
+\end{center}
+}
+
+\frame{
+\frametitle{Average number of inner loops by $\omega$}
+\begin{center}
+\includegraphics[width=\textwidth]{results-graphs/loops.png}
+\end{center}
+}
+
+\frame{
+\frametitle{Note on running time depending on Omega}
+\begin{center}
+\includegraphics[width=\textwidth]{results-graphs/runningTime.png}
+\end{center}
+}
+
+\frame{
+\frametitle{Jacobi after LLL}
+\begin{center}
+\includegraphics[width=\textwidth]{results-graphs/LLLThenJacobi/defect.png}
+\end{center}
+}
+
+\frame{
+\frametitle{Jacobi after LLL}
+\begin{center}
+\includegraphics[width=\textwidth]{results-graphs/LLLThenJacobi/defect-logscale-difference.png}
+\end{center}
+}
+
+\section{Acknowledgements and Bibliography}
+
+\frame{
+\frametitle{Acknowledgements}
+Thanks LACAL, particularly Anja and Nicolas.
+}
+
+\frame[shrink=20]{
+\frametitle{Bibliography}
+\bibliographystyle{alpha}
+\bibliography{references}
+} 
+
+\frame[plain]{
+\vspace{3cm}
+\begin{flushright}\Large
+\cal{Thank you}
+\end{flushright}
+}
+
+\end{document}

@@ -1,0 +1,17 @@
+\begin{algorithm}[H]
+\caption{Lagrange algorithm}
+\label{lagrangeAlgorithm}
+\begin{algorithmic}[1]
+\REQUIRE Two basis ($\vec{b_1, b_2}$) vectors.
+\ENSURE a Lagrange reduced reduced basis $(\vec{b_1, b_2})$
+
+\IF{$\|\vec{b_1} \| < \| \vec{b_2} \| $} \STATE{swap $\vec{b_1}$ and $\vec{b_2}$} \ENDIF
+\REPEAT \STATE{
+$q = \lfloor \frac{ \langle \vec{b_1} \vec{b_2} \rangle }{\| \vec{b_2} \|^2} \rceil $\\
+$r \leftarrow \vec{b_1} - q \vec{b_2}$\\
+$\vec{b_1} \leftarrow \vec{b_2}$\\
+$\vec{b_2} \leftarrow r$
+} \UNTIL{$\| \vec{b_1} \| \leq \| \vec{b_2} \| $}
+
+\end{algorithmic}
+\end{algorithm}

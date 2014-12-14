@@ -54,3 +54,5 @@ install_manifest.txt
 *.bbl
 
 *.blg
+
+report/.texpadtmp/*
