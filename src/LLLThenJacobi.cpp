@@ -261,7 +261,7 @@ double LLLJacobiOrtho(int dimension){
     
     for (int i = 1; i <= testsToRun; i++){
         
-        cout << "Running loop " << i << " for dimension " << dimension << endl;
+        //cout << "Running loop " << i << " for dimension " << dimension << endl;
         
         // - take an HNF basis of a random lattice
         
@@ -305,7 +305,7 @@ double LLLJacobiOrtho(int dimension){
         for (double j = 1; j <= iterations; j++){
             double omega = omega_min+(j/100);
             
-            cout << "Running reduction on jacobi with omega " << omega << endl;
+            //cout << "Running reduction on jacobi with omega " << omega << endl;
             
             mat_ZZ reductionMat = lllReducedMat;
             
@@ -332,6 +332,82 @@ double LLLJacobiOrtho(int dimension){
 }
 
 
+double JacobiHNF(int dimension){
+    
+    cout << "Starting reduction of dimension " << dimension << endl;
+    
+    ofstream jacobiDataFile;
+    
+    jacobiDataFile.open ("jacobiReductionData.txt", ios::app);
+    
+    int testsToRun = 10;
+    
+    vec_RR orthogonalityJacobi;
+    vec_RR hermiteJacobi;
+    
+    vec_double timeJacobi;
+    vec_double countsJacobi;
+    
+    orthogonalityJacobi.SetLength(testsToRun);
+    hermiteJacobi.SetLength(testsToRun);
+    timeJacobi.SetLength(testsToRun);
+    countsJacobi.SetLength(testsToRun);
+    
+    for (int i = 1; i <= testsToRun; i++){
+        
+        cout << "Running loop " << i << " for dimension " << dimension << endl;
+        
+        // - take an HNF basis of a random lattice
+        
+        mat_ZZ mat = MatrixFactory::makePrimeHNFMatrix(dimension, BITS_SIZE);
+        
+        mat_ZZ reducedMat = mat;
+        
+        // - reduce the  basis and check if HF and OD are better <== I assume you mean with Jacobi?
+        
+        double omega_min  = 0.98;
+        double omega_max  = 0.999;
+        double iterations = (omega_max*100) - (omega_min*100);
+        
+        vec_RR JorthogonalityDefectsJacobi;
+        vec_RR JhermiteFactorsJacobi;
+        vec_double JreductionTime;
+        vec_double JjacobiIterations;
+        
+        JorthogonalityDefectsJacobi.SetLength(iterations);
+        JhermiteFactorsJacobi.SetLength(iterations);
+        JreductionTime.SetLength(iterations);
+        JjacobiIterations.SetLength(iterations);
+        
+        for (double j = 1; j <= iterations; j++){
+            double omega = omega_min+(j/100);
+            
+            cout << "Running reduction on jacobi with omega " << omega << endl;
+            
+            mat_ZZ reductionMat = mat;
+            
+            high_resolution_clock::time_point jacobiT1= high_resolution_clock::now();
+            double count = JacobiMethod::reduceLattice(reductionMat, omega);
+            high_resolution_clock::time_point jacobiT2 = high_resolution_clock::now();
+            
+            double jacobiDuration = std::chrono::duration_cast<std::chrono::microseconds>(jacobiT2 - jacobiT1).count();
+            
+            JreductionTime(j)              = jacobiDuration;
+            JjacobiIterations(j)           = count;
+            JorthogonalityDefectsJacobi(j) = orthogonalityDefect(reductionMat);
+            JhermiteFactorsJacobi(j)       = hermiteFactor(reductionMat);
+        }
+        
+        orthogonalityJacobi(i) = computeAverageRR(JorthogonalityDefectsJacobi);
+        hermiteJacobi(i)       = computeAverageRR(JhermiteFactorsJacobi);
+        timeJacobi(i)          = computeAverageDouble(JreductionTime);
+        countsJacobi(i)        = computeAverageDouble(JjacobiIterations);
+    }
+    
+    jacobiDataFile << dimension << " " << computeAverageRR(orthogonalityJacobi) << " " << computeAverageRR(hermiteJacobi) << " " << computeAverageDouble(timeJacobi) << " " << computeAverageDouble(countsJacobi) << endl;
+   
+}
+
 
 int main() {
 
@@ -343,8 +419,8 @@ int main() {
     jacobiDataFile.close();
     lllDataFile.close();
 
-    for (int dimension = 100; dimension <= 100; dimension += 5){
-        LLLJacobiOrtho(dimension);
+    for (int dimension = 50; dimension <= 300; dimension += 5){
+        JacobiHNF(dimension);
     }
 
 

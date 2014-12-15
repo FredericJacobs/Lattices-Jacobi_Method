@@ -27,13 +27,14 @@ RR ReductionQualityChecker::computeHermiteFactor(mat_ZZ &mat) {
 }
 
 RR ReductionQualityChecker::computeOrthogonalityDefect(mat_ZZ &mat) {
+    
+
     RR multResult = sqrt(normsq(mat(1)));
 
     for (int i = 2; i <= mat.NumRows(); i++) {
         multResult *= sqrt(normsq(mat(i)));
     }
-
-    RR denominator = sqrt(determinant(mat * transpose(mat)));
-
-    return pow(multResult/denominator, 1./mat.NumRows());
+        mat_ZZ B = mat * transpose(mat);
+    RR denominator = sqrt(determinant(B));
+       return pow(multResult/denominator, 1./mat.NumRows());
 }

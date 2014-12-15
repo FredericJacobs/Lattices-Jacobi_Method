@@ -106,13 +106,14 @@ bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
     }
 
     g(l,l) -= q * g(l,s);
-    assert(g == z * transpose(z));
+    
     if(verbose) {
+        assert(g == z * transpose(z));
         cout << "new i,j " <<s<< " " << l<<endl;
         cout <<z <<endl;
         //cout <<g <<endl;
     }
-
+    //cout <<" . " ;
     return true;
 }
 
@@ -160,7 +161,7 @@ bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
 
 long fastJacobiMethod(mat_ZZ &basis, RR omega) {
         int n = basis.NumRows();
-    cout << "dim "<<n  <<endl;
+    //cout << "dim "<<n  <<endl;
     mat_ZZ g = basis * transpose(basis);
     bool didReplace = true;
     long count = 0;
@@ -174,11 +175,11 @@ long fastJacobiMethod(mat_ZZ &basis, RR omega) {
                 didReplace =  didReplace || lagrangeIT(g, basis, i, j, omega);
             }
         }
-        if(!(count%10)){
+        /*if(!(count%10)){
             RR currentortho = ReductionQualityChecker::computeOrthogonalityDefect(basis);
             cout <<  "  " <<count << " "  << prevortho - currentortho <<endl;
             prevortho = currentortho;
-        }
+        }*/
     }
     cout <<"end " << count << " loops "<<  ReductionQualityChecker::computeOrthogonalityDefect(basis) << " defect " <<endl;
     return count;
