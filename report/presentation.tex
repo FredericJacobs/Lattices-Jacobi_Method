@@ -134,45 +134,7 @@
  	$$\text{Lattice }\Ls = \sum_i \alert{\Z}\cdot \vec{b}_i $$
  	\end{block}
 	\item $B$ is called a basis of $\Ls$, it is not unique
-	\end{itemize}
- \end{column}
-\end{columns}
-}
-
-\frame{
-\frametitle{Short vectors}
-\begin{columns}[]
-  \begin{column}{0.3\textwidth}
-\input{figlat/latminimum}
-  \end{column}
-  \begin{column}{0.7\textwidth}
-  Norm of a vector $\vec{x}$ is given by $\|\vec{x}\| := \sqrt{\sum x^2_i}$
-  \begin{block}{First lattice minimum}
- 	\begin{itemize}
- 	\item Length of a shortest vector of a $n$-dimensional lattice $\Ls$:
- 	\begin{eqnarray*} 
- 	\lambda_1(\Ls)% &= &\min\limits_{x,y\in \Ls, x\neq y} \|x-y\|\\
- 	&:= &\min\limits_{x\in \Ls, x\neq 0} \|x\|
- 		\end{eqnarray*} 	
- 			\item Minimal distance between two lattice vectors
- 				\end{itemize}
- 				\end{block}
- \end{column}
-\end{columns}
-}
-
-\frame{
-\frametitle{Shortest vector problem }
-\begin{columns}[]
-  \begin{column}{0.3\textwidth}
-    \input{figlat/latSVP}
-  \end{column}
-  \begin{column}{0.7\textwidth}
- 	\begin{itemize}
- 	\item Shortest vector problem ($SVP_2$) \\
- 	Given $B$, find $v\in \Ls\backslash\{0\}$ of minimal length.\vspace{.3cm}
- 	\pause 
- 	\item Problem is hard for large dimensions and a skewed??????????? basis 
+	\item the volume of a full-rank lattice is given by $\text{vol}(\Ls) = |det(B)|$
 	\end{itemize}
  \end{column}
 \end{columns}
@@ -203,6 +165,23 @@ where $a_i \in \mathbb{Z}/ P\mathbb{Z}$.
 
 We define an \emph{almost orthogonal lattice basis} $M$ of dimension $n$ and of bit length $k$ as an $n \times n$ square matrix whose entries are $k$-bit integers picked at random.
 
+}
+
+\frame{
+\frametitle{Gram Schmidt orthogonalisation - GSO}
+\begin{itemize}
+\item Basis $B = (\vec{b}_1, \ldots, \vec{b}_n)$
+\item Compute GSO of $B$:\\
+ $\vec{b}_1^* = \vec{b}_1$\\
+ $\vec{b}_2^* = \vec{b}_2 - \frac{\langle b_2, b_1^*\rangle}{\|\vec{b}_1\|^2} \vec{b}_1$\\
+  $\vec{b}_3^* = \vec{b}_3 - \frac{\langle b_3, b_1^*\rangle}{\|b_1\|^2} \vec{b}^*_1- \frac{\langle b_3, b_2^*\rangle}{\|b_2^*\|^2} \vec{b}_2^*$\\
+  $\ldots$
+  
+  \vspace{.3cm}
+%\item Obtain $\pi_i(b_i) = b_i^*$ as\\
+\item In general 
+ $$\vec{b}_i^* = \vec{b}_i - \sum_{j<i}  \mu_{ij}  \vec{b}_j^* \text{ where }\mu_{ij} := \frac {\langle b_i, b_j^*\rangle} { \|b_j^*\|^2 }$$
+\end{itemize}
 }
 
 \frame{
@@ -350,6 +329,25 @@ The \emph{Hermite factor} of basis vectors $\vec{b_1}, \vec{b_2},...,\vec{b_n}$ 
 \includegraphics[width=\textwidth]{results-graphs/LLLThenJacobi/defect-logscale-difference.png}
 \end{center}
 }
+
+\frame{
+\frametitle{Jacobi after LLL}
+\begin{block}{Example of LLL-reduced basis but not Jacobi-reduced}
+
+\[
+B = \begin{bmatrix}
+  \vec{b_1} \\
+  \vec{b_2} \\
+  \vec{b_3}
+ \end{bmatrix} = \begin{bmatrix}
+  0 & 2 & 0 \\
+  0 & 1 & 2 \\
+  2 & 0 & 0
+ \end{bmatrix}
+\]
+\end{block}
+}
+
 
 \section{Acknowledgements and Bibliography}
 

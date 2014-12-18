@@ -13,7 +13,7 @@ using namespace newNTL;
 #include "ReductionQualityChecker.h"
 
 #pragma mark Lagrange Algorithm
-bool verbose =false;
+bool verbose = true;
 
 ZZ computeQ(vec_ZZ &a1, vec_ZZ &a2) {
     RR qNumerator   = a1 * a2;
@@ -74,8 +74,8 @@ mat_ZZ genericJacobiMethod(mat_ZZ &matrix) {
 #pragma mark LagrangeIT Algorithm
 
 bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
-    
-    
+
+
     int s = i;
     int l = j;
     if(verbose) {
@@ -116,45 +116,6 @@ bool lagrangeIT (mat_ZZ &g, mat_ZZ &z, int i, int j, RR &omega) {
     //cout <<" . " ;
     return true;
 }
-
-#pragma mark Fast Jacobi Method
-
-bool fastJacobiMethodLoopShouldRun(mat_ZZ &g, RR omega) {
-    int nRows = g.NumRows();
-
-    for (int i = 1; i < nRows; i++) {
-        for (int j = i + 1; j <= nRows; j++) {
-
-            int s = i;
-            int l = j;
-
-            if (g(i, i) > g(j,j)){
-                s = j;
-                l = i;
-            }
-
-            RR gij = g(s,l);
-            RR gss = g(s,s);
-            RR gll = g(l,l);
-
-            ZZ condition1 = abs(RoundToZZ(gij/gss));
-            if (condition1 > 1) {
-                //cout << "indexes : " << s << ", " << l << endl;
-                //cout << "gij, gss, gll : " << gij << ", " << gss << ", " << gll << endl;
-                return true;
-            }
-
-            if (((omega * omega)*gll) > ( gss + gll - 2*(abs(gij)))) {
-                //cout << "indexes : " << s << ", " << l << endl;
-                //cout << "gij, gss, gll : " << gij << ", " << gss << ", " << gll << endl;
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
 
 
 // Returns Z, the unimodular reduction matrix
