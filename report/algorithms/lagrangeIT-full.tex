@@ -1,0 +1,30 @@
+\begin{algorithm}[H]
+\caption{LagrangeIT}
+\label{customLagrangeIT}
+\begin{algorithmic}
+\REQUIRE The matrices $G, Z$, a pair of indices $(i,j):i<j$ and a parameter $\omega$
+\ENSURE  Updated $G, Z$ where one Lagrange iteration was performed on the $i$th and $j$th basis vectors. 
+
+\STATE {$s \leftarrow i$}
+\STATE {$l \leftarrow j$}
+
+\IF{$g_{ii} > g_{jj}$}
+    \STATE {$s \leftarrow j; l \leftarrow i$}
+\ENDIF
+
+\STATE{$q \leftarrow \lfloor \frac {g_{ij}}{g_{ss}} \rceil$}
+
+\IF {Verify both $\omega$-Lagrange-reduced conditions}
+
+\STATE{$\vec{z}_l -= q* \vec{z}_s$}
+\STATE{$\vec{g}_l -= q* \vec{g}_s$}
+
+\FOR{every column $k$ of $G$}
+\STATE{$g_{lk} = g_{kl} $}
+\ENDFOR
+
+\STATE{$g_{ll} -= q* g_{ls} $}
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
