@@ -365,8 +365,8 @@ double JacobiHNF(int dimension){
         
         // - reduce the  basis and check if HF and OD are better <== I assume you mean with Jacobi?
         
-        double omega_min  = 0.98;
-        double omega_max  = 0.999;
+        double omega_min  = 0.6;
+        double omega_max  = 0.65;
         double iterations = (omega_max*100) - (omega_min*100);
         
         vec_RR JorthogonalityDefectsJacobi;

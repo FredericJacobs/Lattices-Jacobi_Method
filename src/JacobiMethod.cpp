@@ -168,7 +168,7 @@ long fastJacobiMethod(mat_ZZ &basis, RR omega) {
     RR prevortho=0;
     while(didReplace){
         count++;
-        if(count%1000==0)cout << count<<" ";
+        //if(count%1000==0)cout << count<<" ";
         didReplace = false;
         for (int i = 1; i < n; i++) {
             for (int j = i + 1; j <= n; j++) {
